@@ -1,0 +1,1 @@
+export {SearchRecipesResult} from "./SearchRecipesResult"

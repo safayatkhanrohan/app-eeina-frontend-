@@ -1,0 +1,22 @@
+{
+  "appId": "com.eeina_dev2.com",
+  "appName": "eeinaaApp",
+  "webDir": "dist",
+    "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 3000, 
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff", 
+      "androidSplashResourceName": "logo"
+    }
+  },
+  "server":{
+   "url":"https://dev.eeina.com",
+      "allowNavigation": ["*"],
+  "cleartext": true
+  }
+  
+}
+
+
+

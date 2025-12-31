@@ -1,0 +1,30 @@
+export interface CommonTranslations {
+  loading: string;
+  save: string;
+  cancel: string;
+  delete: string;
+  edit: string;
+  add: string;
+  remove: string;
+  view_all: string;
+  back: string;
+  next: string;
+  previous: string;
+  close: string;
+  confirm: string;
+  yes: string;
+  no: string;
+  Follow: string;
+  Following: string;
+  Crop: string;
+  view_details: string;
+  show: string;
+  notFoundDusc: string;
+  All: string;
+  success_added: string;
+  error_no_ingredients: string;
+  error_failed_add: string;
+  done: string;
+  generating: string;
+  error_occurred: string;
+}
