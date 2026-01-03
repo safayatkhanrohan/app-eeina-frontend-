@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { ArrowLeft, Search, Grid3X3, List, BookOpen } from 'lucide-react';
 import { useGetPublicRecipeQuery } from '../../redux/Features/Recipe/RecipeApi';
+import { useGetCategoryBySlugQuery } from '../../redux/Features/Category/CategoryAPI';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import { RecipiSkeleton } from '../../components/ui/skeletons/RecipiSkeleton';
 import { CategoryHero } from '../../components/Category';
@@ -23,9 +24,12 @@ export const Category = (): JSX.Element => {
   // Track category view
   useEffect(() => {
     if (categoryName) {
-       trackIfAllowed(() =>analytics.trackCategoryView(categoryName, categoryName));
+      trackIfAllowed(() => analytics.trackCategoryView(categoryName, categoryName));
     }
   }, [categoryName]);
+
+  const { data: categoryDetails } = useGetCategoryBySlugQuery(categoryName as string);
+  const targetCategory = categoryDetails?.data?.slug?.en || categoryName;
 
   const difficulties = [
     { key: 'All', label: t.common.All },
@@ -44,7 +48,7 @@ export const Category = (): JSX.Element => {
   } = useInfiniteScroll(
     useGetPublicRecipeQuery,
     {
-      category: categoryName,
+      category: targetCategory,
       q: searchQuery,
       difficulty: difficultyFilter === 'All' ? undefined : difficultyFilter,
     },

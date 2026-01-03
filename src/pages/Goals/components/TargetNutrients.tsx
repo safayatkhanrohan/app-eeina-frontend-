@@ -20,7 +20,7 @@ interface TargetNutrientsProps extends GoalSetupProps {
 const TargetNutrients = ({ next, userInfo }: TargetNutrientsProps) => {
   const { t } = useLanguage();
   const nutrition = userInfo.goalResponse?.targetNutrition;
-console.log("nutrition",userInfo)
+  console.log("nutrition", userInfo)
   if (!nutrition) return null;
 
   const nutrientGroups = [

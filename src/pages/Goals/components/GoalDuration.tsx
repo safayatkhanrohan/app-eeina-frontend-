@@ -191,7 +191,7 @@ const GoalDuration = ({ next, back, skip, isModification, goalId }: GoalDuration
   };
 
   const handleCreateGoal = async () => {
-    
+
     console.log('Creating/Updating goal with info:', { ...userInfo, type: userInfo.type });
     const isValid = await trigger();
     if (!isValid) return;
@@ -419,6 +419,7 @@ const GoalDuration = ({ next, back, skip, isModification, goalId }: GoalDuration
           <Button
             variant={'outline'}
             onClick={skip}
+            type="button"
             className="py-[1.4rem] flex-1 mx-auto !text-[#6AB240] text-16 md:text-[20px] font-medium"
           >
             {t.goalSetup.skip}

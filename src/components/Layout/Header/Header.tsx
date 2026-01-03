@@ -83,6 +83,7 @@ export const Header: React.FC = (): JSX.Element => {
   useClickOutside(searchRef, () => setIsSearchOpen(false));
   useClickOutside(profileRef, () => setIsProfileDropdownOpen(false));
   const getLocalizedPath = (path: string): string => {
+    if (path.startsWith('http')) return path;
     return language === 'ar' ? `/ar${path === '/' ? '' : path}` : path;
   };
 
@@ -98,7 +99,7 @@ export const Header: React.FC = (): JSX.Element => {
     console.log('Attempting to log out...');
     try {
       // Track logout event before actually logging out
-       trackIfAllowed(() =>analytics.trackLogout());
+      trackIfAllowed(() => analytics.trackLogout());
 
       await logOut(undefined).unwrap();
       dispatch(baseApi.util.resetApiState());
@@ -137,11 +138,10 @@ export const Header: React.FC = (): JSX.Element => {
                 key={index}
                 to={getLocalizedPath(item.path)}
                 onClick={() => setActiveLink(item.path)}
-                className={`transition text-base xl:text-lg cursor-pointer ${
-                  activeLink === item.path
-                    ? 'text-primaryColor font-bold'
-                    : 'text-gray-500 font-normal'
-                } hover:text-primaryColor`}
+                className={`transition text-base xl:text-lg cursor-pointer ${activeLink === item.path
+                  ? 'text-primaryColor font-bold'
+                  : 'text-gray-500 font-normal'
+                  } hover:text-primaryColor`}
               >
                 {item.name}
               </Link>
@@ -188,7 +188,7 @@ export const Header: React.FC = (): JSX.Element => {
                         currentUser.image?.url || currentUser.profilePicture?.url || '/unnamed.jpg'
                       }
                       className="w-full h-full object-cover"
-                       onError={(e) => (e.currentTarget.src = '/unnamed.jpg')}
+                      onError={(e) => (e.currentTarget.src = '/unnamed.jpg')}
                     />
                   </div>
                 </button>
@@ -196,9 +196,8 @@ export const Header: React.FC = (): JSX.Element => {
                 {/* Dropdown */}
                 {isProfileDropdownOpen && (
                   <div
-                    className={`absolute mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200 z-50 ${
-                      isRTL ? 'left-0' : 'right-0'
-                    }`}
+                    className={`absolute mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200 z-50 ${isRTL ? 'left-0' : 'right-0'
+                      }`}
                   >
                     <div className="px-4 py-3 border-b">
                       <p className="text-sm font-medium">

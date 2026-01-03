@@ -3,23 +3,11 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
 import { Separator } from "../../components/ui/separator";
 import {
-  Check,
-  ChefHat,
   Eye,
   EyeOff,
-  Globe,
-  Heart,
-  Lock,
-  Mail,
-  Phone,
-  Star,
-  User,
-  Users,
 } from "lucide-react";
 import { SignupFormData, signupSchema } from "../../schemas/auth/authSchema";
 import { useSignupMutation } from "../../redux/Features/Auth/authApi";
@@ -37,7 +25,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const Signup = (): JSX.Element => {
   const { language, t, isRTL } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [signUp] = useSignupMutation();
   const navigate = useNavigate();
@@ -85,7 +73,6 @@ export const Signup = (): JSX.Element => {
   }, [password]);
 
   const onSubmit = async (data: SignupFormData) => {
-    console.log("ddddddddd");
     try {
       const referralCode = localStorage.getItem("referral_code");
       const payload = referralCode ? { ...data, referralCode } : data;
@@ -141,7 +128,7 @@ export const Signup = (): JSX.Element => {
               </h3>
               <p className="text-[14px] font-medium text-[#3F4247] mb-1">
                 {t.auth.already_have_account}
-                <Link to={getLocalizedPath("/login", language)}>
+                <Link to={getLocalizedPath("/login", language)} className="hover:!text-[#1c9a40]">
                   {" "}
                   {t.auth.login}
                 </Link>

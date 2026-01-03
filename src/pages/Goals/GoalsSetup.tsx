@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm, FormProvider, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -17,6 +17,7 @@ import TargetNutrients from './components/TargetNutrients';
 
 const GoalSetup = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { goalType, isModification, goalId, currentWeight, height, age, gender, activityLevel } =
     location.state || {};
   const { t } = useLanguage();
@@ -46,7 +47,7 @@ const GoalSetup = () => {
 
   const next = () => setStep(step + 1);
   const back = () => setStep(step - 1);
-const skip = () => setStep((prev) => prev + 1);
+  const skip = () => navigate('/');
 
   // Check if user needs target weight step (only for weight gain/loss goals)
   const needsTargetWeight = userInfo.type === 'Gain Weight' || userInfo.type === 'Lose Weight';

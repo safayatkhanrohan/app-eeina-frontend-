@@ -42,9 +42,8 @@ const PlanTemplates = ({ next }: GoalSetupProps) => {
             {plans.map((plan, index) => (
               <Card
                 key={index}
-                className={`flex justify-start items-center gap-5 md:gap-8 py-4 px-4 md:px-7 ${
-                  plan.bgColor === 'white' ? 'bg-white' : 'bg-[#6AB240]'
-                }`}
+                className={`flex justify-start items-center gap-5 md:gap-8 py-4 px-4 md:px-7 ${plan.bgColor === 'white' ? 'bg-white' : 'bg-[#6AB240]'
+                  }`}
               >
                 {plan.icon}
                 <div className="flex flex-col gap-1" style={{ color: plan.textColor }}>

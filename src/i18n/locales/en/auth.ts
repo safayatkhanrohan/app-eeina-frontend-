@@ -88,6 +88,19 @@ export const auth: AuthTranslations = {
   unexpected_error: 'An unexpected error occurred',
   loginTitle:"Log in and discover your ideal weight loss",
   Newuser:"New user?",
-  registerTitle:"Register now and discover the best delicious recipes"
+  registerTitle:"Register now and discover the best delicious recipes",
+  ForgitpasswordTitle:"We're here to help you get back into your account.",
+  Forgotpassword: "Forgot password?",
+  Forgotpasswordtitle: "No worriest! Just enter your email and we’ll send you a reset password link.",
+  Justremember: "Just remember?",
+  createnewpassword:"Create new password",
+  Createanaccounttitle:"Please create a new password that you don’t use on any other site.",
+  Confirmnewpassword:"Confirm new password",
+  ChangePassword:"Change Password",
+  SendRecoveryEmail:"Send Recovery Email",
+  send:"Sending .... ",
+  verifycode:"A verification code has been sent to your email.",
+  changepassword_success:"Your password has been changed successfully.",
+  session_expired:"Your session has expired. Please try again."
 
 };

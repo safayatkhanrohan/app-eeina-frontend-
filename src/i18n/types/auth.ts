@@ -1,3 +1,5 @@
+
+
 export interface AuthTranslations {
   login: string;
   signup: string;
@@ -87,4 +89,17 @@ export interface AuthTranslations {
   loginTitle: string;
   Newuser: string;
   registerTitle: string;
+  ForgitpasswordTitle: string;
+  Forgotpassword: string;
+  Forgotpasswordtitle: string;
+  Justremember: string;
+  createnewpassword:string;
+  Createanaccounttitle:string;
+  Confirmnewpassword:string;
+  ChangePassword:string;
+  SendRecoveryEmail:string;
+  send:string;
+  verifycode:string;
+  changepassword_success:string;
+  session_expired:string;
 }

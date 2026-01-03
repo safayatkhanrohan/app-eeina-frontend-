@@ -3,7 +3,7 @@ import { GoalSetupProps, UserInfo } from '../types/type';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormContext } from 'react-hook-form';
 
-interface BasicInformationProps extends GoalSetupProps {}
+interface BasicInformationProps extends GoalSetupProps { }
 
 const BasicInformation = ({ next, skip }: BasicInformationProps) => {
   const { t } = useLanguage();
@@ -95,12 +95,12 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               <input
                 type="number"
                 {...register('age', { valueAsNumber: true })}
-                id="floating_outlined"
+                id="floating_outlined_age"
                 placeholder=" "
                 className="block h-12 w-full px-3 pb-2.5 pt-4 text-base text-gray-800 bg-white rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-1 focus:ring-[#DCDBDD] focus:border-[#DCDBDD] peer"
               />
               <label
-                htmlFor="floating_outlined"
+                htmlFor="floating_outlined_age"
                 className="absolute text-[14px] md:text-[16px] text-[#84818A] duration-300 transform -translate-y-1/2
                  top-1/2 z-10 origin-[0] bg-white px-2 peer-focus:top-2 peer-focus:scale-75 
                  peer-focus:-translate-y-4 peer-focus:text-[#84818A] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
@@ -173,15 +173,15 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
           >
             {t.goalSetup.next_btn}
           </Button>
-            <Button
-              variant={'outline'}
-              onClick={skip}
-                type="button"
-              className="py-[1.4rem] w-full mx-auto !text-[#6AB240] text-16 md:text-[20px] font-medium"
-            >
-              {t.goalSetup.skip}
-            </Button>
-    
+          <Button
+            variant={'outline'}
+            onClick={skip}
+            type="button"
+            className="py-[1.4rem] w-full mx-auto !text-[#6AB240] text-16 md:text-[20px] font-medium"
+          >
+            {t.goalSetup.skip}
+          </Button>
+
         </div>
       </div>
       <div className="flex-1 h-full  hidden md:flex">

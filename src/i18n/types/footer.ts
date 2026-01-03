@@ -21,4 +21,12 @@ export interface FooterTranslations {
   About: string;
   Contact: string;
   paymentpolicy: string;
+    programs:string,
+  Profile:string,
+  MyGoals:string,
+  Nutritionist:string;
+  exclusiveoffers:string;
+  EmailAddress:string;
+  Subscribe:string;
+  reservRights:string
 }

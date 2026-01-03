@@ -23,5 +23,13 @@ export const footer: FooterTranslations = {
   Shop: "Shop",
   About: "About",
   Contact: "Contact",
-  paymentpolicy:"Payment Policy"
+  paymentpolicy:"Payment Policy",
+  programs:"programs",
+  Profile:"Profile",
+  MyGoals:"My Goals",
+  Nutritionist:"Nutritionist",
+  exclusiveoffers:"Sign up for exclusive offers, original stories, events and more.",
+  EmailAddress:"Email Address",
+  Subscribe:"Subscribe",
+  reservRights:"All rights reserved to Ennaa Company-{{year}}"
   };
