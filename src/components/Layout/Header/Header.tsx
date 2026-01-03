@@ -93,7 +93,7 @@ export const Header: React.FC = (): JSX.Element => {
     { name: t.nav.planner, path: '/planner' },
     { name: t.nav.goals, path: '/goals-dashboard' },
     { name: t.nav.Packages, path: '/packages' },
-    { name: t.nav.Blog, path: 'https://eeina.com/blog' },
+    { name: t.nav.Blog, path: `https://eeina.com/${language=="ar"?"ar":"en"}/blog` },
   ];
   const handleLogout = async (): Promise<void> => {
     console.log('Attempting to log out...');

@@ -58,6 +58,8 @@ import Saved from '@/pages/Profilev2/component/Saved';
 import PaymentCallback from '@/pages/Payment/PaymentCallback';
 import PaymentFailed from '@/pages/Payment/PaymentFailed';
 import SubscriptionPage from '@/pages/Subscription/SubscriptionPage';
+import Forgetpassword from '@/pages/Auth/Forgetpassword';
+import Resetpassword from '@/pages/Auth/Resetpassword';
 
 // ------------------------------------------------------
 // ENGLISH ROUTES
@@ -70,6 +72,8 @@ const englishRoutes = [
       { path: '/login', element: <Login /> },
       { path: '/signup/*', element: <Signup /> },
       { path: '/verify-otp', element: <VerifyOtp /> },
+      { path: '/forgot-password', element: <Forgetpassword /> },
+      { path: '/Resetpassword', element: <Resetpassword /> },
       {
         path: '/goals-setup',
         element: (

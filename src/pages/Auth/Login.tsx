@@ -87,7 +87,7 @@ export const Login = (): JSX.Element => {
               </h3>
               <p className="text-[14px] font-medium text-[#3F4247] mb-1">
                 {t.auth.Newuser}
-                <Link to={getLocalizedPath("/signup", language)}>
+                <Link to={getLocalizedPath("/signup", language)} className=" hover:!text-[#1c9a40]">
                  {" "} {t.auth.create_account}
                 </Link>
               </p>
