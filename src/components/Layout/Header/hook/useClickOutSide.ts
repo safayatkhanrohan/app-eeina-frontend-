@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 //  Hook to close when clicking outside of a ref element
 
-export const useClickOutside = (ref: React.RefObject<HTMLElement>, onClose: () => void) => {
+export const useClickOutside = (ref: React.RefObject<HTMLElement | null>, onClose: () => void) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

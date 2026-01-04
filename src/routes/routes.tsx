@@ -1,7 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom';
-import ProtectedRoute from '@/routes/ProtectedRoute';
-import { MainLayout, AuthLayout } from '@/components/Layout';
-import { AnalyticsLayout } from '@/components/Layout/AnalyticsLayout';
+import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "@/routes/ProtectedRoute";
+import { MainLayout, AuthLayout } from "@/components/Layout";
+import { AnalyticsLayout } from "@/components/Layout/AnalyticsLayout";
 
 // --- Pages ---
 import { ListsLayout } from '@/pages/ShoppingList/ListLayout';
@@ -70,21 +70,21 @@ const englishRoutes = [
   {
     element: <AuthLayout />,
     children: [
-      { path: '/login', element: <Login /> },
-      { path: '/signup/*', element: <Signup /> },
-      { path: '/verify-otp', element: <VerifyOtp /> },
-      { path: '/forgot-password', element: <Forgetpassword /> },
-      { path: '/Resetpassword', element: <Resetpassword /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup/*", element: <Signup /> },
+      { path: "/verify-otp", element: <VerifyOtp /> },
+      { path: "/forgot-password", element: <Forgetpassword /> },
+      { path: "/Resetpassword", element: <Resetpassword /> },
       {
-        path: '/goals-setup',
+        path: "/goals-setup",
         element: (
           <ProtectedRoute>
             <GoalsSetup />
           </ProtectedRoute>
         ),
       },
-      { path: '/Profile-Setup', element: <ProfileSetup /> },
-      { path: '/auth/callback', element: <OAuthCallback /> },
+      { path: "/Profile-Setup", element: <ProfileSetup /> },
+      { path: "/auth/callback", element: <OAuthCallback /> },
     ],
   },
 
@@ -92,19 +92,19 @@ const englishRoutes = [
   {
     element: <MainLayout />,
     children: [
-      { path: '/', element: <Home /> },
-      { path: '/recipes', element: <Explore /> },
-      { path: '/processed-food', element: <ProcessedFood /> },
-      { path: '/processed-food/:slug', element: <ProcessedFoodDetails /> },
-      { path: '/ingredients', element: <Ingredient /> },
-      { path: '/ingredient/:slug', element: <IngredientDetails /> },
-      { path: '/recipe/:slug', element: <RecipeDetails /> },
-      { path: '/category/:categoryName', element: <Category /> },
-      { path: '/user/:id', element: <CreatedByProfile /> },
-      { path: '/trending', element: <Trending /> },
-      { path: '/privacy-policy', element: <Privacy_Policy /> },
-      { path: '/Terms_Conditions', element: <Terms_Conditions /> },
-      { path: '/search', element: <SearchRecipesResult /> },
+      { path: "/", element: <Home /> },
+      { path: "/recipes", element: <Explore /> },
+      { path: "/processed-food", element: <ProcessedFood /> },
+      { path: "/processed-food/:slug", element: <ProcessedFoodDetails /> },
+      { path: "/ingredients", element: <Ingredient /> },
+      { path: "/ingredient/:slug", element: <IngredientDetails /> },
+      { path: "/recipe/:slug", element: <RecipeDetails /> },
+      { path: "/category/:categoryName", element: <Category /> },
+      { path: "/user/:id", element: <CreatedByProfile /> },
+      { path: "/trending", element: <Trending /> },
+      { path: "/privacy-policy", element: <Privacy_Policy /> },
+      { path: "/Terms_Conditions", element: <Terms_Conditions /> },
+      { path: "/search", element: <SearchRecipesResult /> },
 
       { path: '/packages', element: <Packages /> },
       { path: '/order-summary/:orderId', element: <OrderSummary /> },
@@ -125,7 +125,7 @@ const englishRoutes = [
       // Protected Routes
 
       {
-        path: '/planner',
+        path: "/planner",
         element: (
           <ProtectedRoute>
             <MealPlanner />
@@ -133,17 +133,21 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/lists',
-        element: <ListsLayout />,
+        path: "/lists",
+        element: (
+          <ProtectedRoute>
+            <ListsLayout />
+          </ProtectedRoute>
+        ),
         children: [
           {
-            path: ':id',
+            path: ":id",
             element: <ListDetails />,
           },
         ],
       },
       {
-        path: '/create-recipe',
+        path: "/create-recipe",
         element: (
           <ProtectedRoute>
             <CreateRecipe />
@@ -151,7 +155,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/edit-recipe/:id',
+        path: "/edit-recipe/:id",
         element: (
           <ProtectedRoute>
             <EditRecipe />
@@ -159,7 +163,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/checkout',
+        path: "/checkout",
         element: (
           <ProtectedRoute>
             <Checkout />
@@ -168,7 +172,7 @@ const englishRoutes = [
       },
 
       // 404 Fallback
-      { path: '*', element: <NotFound /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 
@@ -176,7 +180,7 @@ const englishRoutes = [
     element: <ProfileLayOut />,
     children: [
       {
-        path: '/Profile',
+        path: "/Profile",
         element: (
           <ProtectedRoute>
             <Profile />
@@ -184,7 +188,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/Profile/goals',
+        path: "/Profile/goals",
         element: (
           <ProtectedRoute>
             <ProfileGoalsLayout />
@@ -193,35 +197,35 @@ const englishRoutes = [
         children: [
           {
             index: true,
-            element: <ProfileViewGoals />
+            element: <ProfileViewGoals />,
           },
           {
-            path: 'meal-history',
-            element: <ProfileMealHistory />
+            path: "meal-history",
+            element: <ProfileMealHistory />,
           },
           {
-            path: 'health-settings',
-            element: <ProfileHealthSettings />
-          }
-        ]
+            path: "health-settings",
+            element: <ProfileHealthSettings />,
+          },
+        ],
       },
       {
-        path: '/edit',
+        path: "/edit",
         element: (
           <ProtectedRoute>
             <EditProfile />
           </ProtectedRoute>
         ),
         children: [
-          { path: 'Profile-images', element: <EditProfileImage /> },
-          { path: 'Basic-information', element: <BasicInformation /> },
-          { path: 'Preferencers', element: <Preferences /> },
-          { path: 'Social-Media', element: <SocialMediaLinks /> },
-          { path: 'Health-Profile', element: <HealthProfile /> },
+          { path: "Profile-images", element: <EditProfileImage /> },
+          { path: "Basic-information", element: <BasicInformation /> },
+          { path: "Preferencers", element: <Preferences /> },
+          { path: "Social-Media", element: <SocialMediaLinks /> },
+          { path: "Health-Profile", element: <HealthProfile /> },
         ],
       },
       {
-        path: '/savedrecipes',
+        path: "/savedrecipes",
         element: (
           <ProtectedRoute>
             <Saved />
@@ -229,7 +233,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/account-settings',
+        path: "/account-settings",
         element: (
           <ProtectedRoute>
             <AccountSettings />
@@ -237,7 +241,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/subscription',
+        path: "/subscription",
         element: (
           <ProtectedRoute>
             <SubscriptionPage />
@@ -252,7 +256,7 @@ const englishRoutes = [
     element: <GoalDashboardLayout />,
     children: [
       {
-        path: '/goals-dashboard',
+        path: "/goals-dashboard",
         element: (
           <ProtectedRoute>
             <GoalsDashboard />
@@ -260,7 +264,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/dashboard-meal-history',
+        path: "/dashboard-meal-history",
         element: (
           <ProtectedRoute>
             <DashboardMealHistory />
@@ -268,7 +272,7 @@ const englishRoutes = [
         ),
       },
       {
-        path: '/dashboard-health-settings',
+        path: "/dashboard-health-settings",
         element: (
           <ProtectedRoute>
             <DashboardHealthSettings />
@@ -282,15 +286,15 @@ const englishRoutes = [
     element: <NutritionistLayout />,
     children: [
       {
-        path: '/nutritionist',
+        path: "/nutritionist",
         element: <Nutritionist />,
       },
       {
-        path: '/nutritionist/video',
+        path: "/nutritionist/video",
         element: <NutritionistVideo />,
       },
       {
-        path: '/nutritionist/chat',
+        path: "/nutritionist/chat",
         element: <NutritionistChat />,
       },
     ],

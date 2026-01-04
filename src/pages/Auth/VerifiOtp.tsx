@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent, JSX } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Card, CardContent } from "../../components/ui/card";
@@ -134,7 +134,8 @@ export const VerifyOtp = (): JSX.Element => {
             <Button
               onClick={handleVerify}
               disabled={isVerifying}
-              className="w-full h-12 bg-primaryColor text-white text-base font-semibold hover:bg-[#1c9a40] transition-colors duration-300 disabled:bg-gray-400"
+              className="w-full h-12 bg-primaryColor text-white text-base font-semibold hover:bg-[#1c9a40] transition-colors duration-300
+               disabled:bg-primaryColor disabled:opacity-50"
             >
               {isVerifying ? t.auth.verifying : t.auth.verify_btn}
             </Button>
@@ -146,7 +147,7 @@ export const VerifyOtp = (): JSX.Element => {
                 disabled={resendCooldown > 0}
                 className={`font-semibold text-primaryColor hover:underline focus:outline-none ${
                   resendCooldown > 0
-                    ? "opacity-50 cursor-not-allowed hover:underline-none"
+                    ? "opacity-50 cursor-not-allowed hover:underline-none "
                     : ""
                 }`}
               >

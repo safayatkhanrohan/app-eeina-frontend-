@@ -34,7 +34,7 @@ export const Footer = () => {
     { title: t.nav.Blog, path: `${eeina_com_url}/blog` },
     { title: t.footer.About, path: `${eeina_com_url}/about` },
     { title: t.footer.privacy_policy, path: "/privacy-policy" },
-    { title: t.footer.programs, path: `/programs` },
+    { title: t.footer.programs, path: `${eeina_com_url}/nutrition-program` },
     { title: t.nav.planner, path: `/planner` },
     { title: t.nav.Packages, path: `/packages` },
     { title: t.footer.terms_conditions, path: "/Terms_Conditions" },
@@ -51,14 +51,15 @@ export const Footer = () => {
     <footer className="relative w-full lg:mt-10 xl:mt-0 xl2:mt-20 bg-primaryColor xl:bg-transparent ">
       <div className="container mx-auto max-w-6xl xl2:max-w-7xl px-3 ">
         <FooterWave />
+
         <ImgSvg />
 
         {/* Footer Content */}
         <div className="relative z-10 pt-10 xl:pt-48  flex flex-col-reverse lg:flex-col">
           <Link to={"/"} className="hidden w-[149px] h-[100px] lg:inline-block">
             <img
-              src="./EEINA_GBg_RGB-01-removebg-preview.png"
-              className="w-full h-full"
+              src="./eeinaaWhitlogo.png"
+              className="w-full h-full object-cover"
               alt="logo"
             />
           </Link>
@@ -69,18 +70,19 @@ export const Footer = () => {
                   <p className="hidden lg:block flex-1 text-white text-xs sm:text-sm font-normal !leading-6">
                     {t.footer.copyright.replace("{{year}}", year.toString())}
                   </p>
-                    <Link
+                  <Link
                     to={"/"}
-                    className="flex-1 w-[66px] h-[50px] lg:w-[149px] lg:h-[100px] inline-block lg:hidden"
+                    className="flex-1 max-w-[66px] h-[50px] sm:max-w-[80px] sm:h-[70px] lg:w-[149px] lg:h-[100px] block lg:hidden"
                   >
                     <img
-                      src="./EEINA_GBg_RGB-01-removebg-preview.png"
-                      className="w-full h-full"
+                      src="./eeinaaWhitlogo.png"
+                      className="w-full h-full object-cover"
                       alt="logo"
                     />
                   </Link>
                   {/* social media  */}
-                  <div className="flex-1 flex gap-5 md:justify-end">
+
+                  <div className="flex-1 flex gap-5 justify-end items-center">
                     <a
                       href="https://facebook.com/eeina_life"
                       target="_blank"
@@ -115,7 +117,6 @@ export const Footer = () => {
                       <Instagram className="w-10 h-10" />
                     </a>
                   </div>
-                
                 </div>
               </div>
 
