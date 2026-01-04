@@ -3,22 +3,17 @@ import { Card } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Package } from '@/types/Package';
 
-import { Loader2 } from 'lucide-react';
-
 interface PlanFeaturesCardProps {
   packages: Package[];
-  interval: 'monthly' | 'yearly';
-  onBuyNow: (pkg: Package) => void;
+  onStartTrial: (pkg: Package) => void;
   activePackageId: string | undefined;
-  isCreatingOrder: boolean;
 }
 
 const PlanFeaturesCard = ({
   packages,
-  onBuyNow,
+  onStartTrial,
   activePackageId,
-  isCreatingOrder,
-}: Omit<PlanFeaturesCardProps, 'interval'>) => {
+}: PlanFeaturesCardProps) => {
   const { language, t } = useLanguage();
 
   return (
@@ -43,8 +38,8 @@ const PlanFeaturesCard = ({
             </div>
             {showButton && (
               <Button
-                onClick={() => onBuyNow(pkg)}
-                disabled={isCreatingOrder || isCurrentPlan}
+                onClick={() => onStartTrial(pkg)}
+                disabled={isCurrentPlan}
                 className={`py-6 border-[1.5] shadow text-[14px] lg:text-base font-medium mt-4 gap-2
               ${
                 pkg.bestDeal
@@ -52,9 +47,6 @@ const PlanFeaturesCard = ({
                   : 'border-[#EFEFEF] bg-[#F5F5F5] rounded-xl text-[#383838] hover:bg-[#F5F5F5]'
               }`}
               >
-                {isCreatingOrder && !isCurrentPlan ? (
-                  <Loader2 className="animate-spin w-4 h-4" />
-                ) : null}
                 {isCurrentPlan ? t.Package.CurrentPlan : t.Package.UpgradePlan}
               </Button>
             )}

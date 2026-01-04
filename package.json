@@ -27,6 +27,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "@tap-payments/card-sdk": "^1.0.2",
     "async-mutex": "^0.5.0",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.0",

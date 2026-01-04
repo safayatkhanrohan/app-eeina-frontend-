@@ -54,6 +54,7 @@ import Saved from '@/pages/Profilev2/component/Saved';
 import PaymentCallback from '@/pages/Payment/PaymentCallback';
 import PaymentFailed from '@/pages/Payment/PaymentFailed';
 import SubscriptionPage from '@/pages/Subscription/SubscriptionPage';
+import StartTrialPage from '@/pages/Payment/StartTrialPage';
 
 // ------------------------------------------------------
 // ENGLISH ROUTES
@@ -104,6 +105,14 @@ const englishRoutes = [
       { path: '/payment/success/:orderId', element: <PaymentSuccess /> },
       { path: '/payment/failed/:orderId', element: <PaymentFailed /> },
       { path: '/subscription', element: <SubscriptionPage /> },
+      { 
+        path: '/start-trial', 
+        element: (
+          <ProtectedRoute>
+            <StartTrialPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // Protected Routes
 
