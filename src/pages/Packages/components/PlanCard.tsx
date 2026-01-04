@@ -5,21 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Package } from "@/types/Package";
-import { Loader2 } from "lucide-react";
 
 interface PlanCardProps {
   packages: Package[];
   interval: "monthly" | "yearly";
-  onBuyNow: (pkg: Package) => void;
-  isCreatingOrder: boolean;
+  onStartTrial: (pkg: Package) => void;
   activePackageId: string | undefined;
 }
 
 const PlanCard = ({
   packages,
   interval,
-  onBuyNow,
-  isCreatingOrder,
+  onStartTrial,
   activePackageId,
 }: PlanCardProps) => {
   const { t, language } = useLanguage();
@@ -90,8 +87,8 @@ const PlanCard = ({
 
             {showButton && (
               <Button
-                onClick={() => onBuyNow(pkg)}
-                disabled={isCreatingOrder || isCurrentPlan}
+                onClick={() => onStartTrial(pkg)}
+                disabled={isCurrentPlan}
                 className={`py-6 text-[14px] lg:text-base font-medium rounded-xl flex items-center justify-center gap-2
                 ${
                   isBestDeal
@@ -99,9 +96,6 @@ const PlanCard = ({
                     : "border-[1.5px] border-[#EFEFEF] bg-[#F5F5F5] text-[#383838] hover:bg-[#FFFFFF] hover:border-black"
                 }`}
               >
-                {isCreatingOrder && !isCurrentPlan ? (
-                  <Loader2 className="animate-spin w-4 h-4" />
-                ) : null}
                 {isCurrentPlan
                   ? t.Package.CurrentPlan
                   : !isFreePkg

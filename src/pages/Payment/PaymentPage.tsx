@@ -1,24 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetOrderByIdQuery } from '@/redux/Features/Package/PackageApi';
+import {
+  useCreateTapChargeMutation,
+  useGetOrderByIdQuery,
+} from '@/redux/Features/Package/PackageApi';
+import {
+  TapCard,
+  Currencies,
+  Direction,
+  Edges,
+  Locale,
+  Theme,
+  tokenize,
+} from '@tap-payments/card-sdk';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
-
-declare global {
-  interface Window {
-    Moyasar: any;
-  }
-}
+import { useAppSelector } from '@/hooks/hook';
+const TAP_PUBLIC_KEY = import.meta.env.VITE_TAP_PUBLIC_KEY;
 
 const PaymentPage = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { data: orderResponse, isLoading, error } = useGetOrderByIdQuery(orderId);
 
+  const user = useAppSelector((s) => s.auth.user);
+  const [createTapCharge, { isLoading: isCreatingCharge }] = useCreateTapChargeMutation();
+  const [tapReady, setTapReady] = useState(false);
+  const [tokenId, setTokenId] = useState<string | null>(null);
+  const [isCardValid, setIsCardValid] = useState(false);
+  const [isTokenizing, setIsTokenizing] = useState(false);
+  const startedChargeForTokenRef = useRef<string | null>(null);
+
   const order = orderResponse?.data;
-  const packageDetails = order?.packageId;
+
+  const amount = useMemo(() => {
+    const total = Number(order?.pricingSnapshot?.total ?? 0);
+    return Number.isFinite(total) ? total : 0;
+  }, [order?.pricingSnapshot?.total]);
 
   useEffect(() => {
     if (!order) return;
@@ -27,48 +47,96 @@ const PaymentPage = () => {
       navigate(`/order-summary/${order._id}`);
       return;
     }
+  }, [order, navigate]);
 
-    const script = document.createElement('script');
-    script.src = 'https://cdn.moyasar.com/mpf/1.14.0/moyasar.js';
-    script.async = true;
-    document.body.appendChild(script);
+  const customerFirst = user?.firstName || user?.fullName?.split(' ')?.[0] || 'Customer';
+  const customerLast = user?.lastName || user?.fullName?.split(' ')?.slice(1).join(' ') || '';
+  const email = user?.email || '';
 
-    const link = document.createElement('link');
-    link.href = 'https://cdn.moyasar.com/mpf/1.14.0/moyasar.css';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
+  const phone = (user as any)?.phone as string | undefined;
+  const phoneNormalized = phone?.replace(/\s/g, '') || '';
+  const phoneCountryCode = phoneNormalized.startsWith('+')
+    ? (phoneNormalized.match(/^\+(\d{1,3})/)?.[1] ?? '966')
+    : '966';
+  const phoneNumber = phoneNormalized.replace(/^\+?\d{1,4}/, '').replace(/\D/g, '') || '0000000000';
 
-    const initMoyasar = () => {
-      if (window.Moyasar) {
-        try {
-          window.Moyasar.init({
-            element: '.mysr-form',
-            amount: Math.round(order.pricingSnapshot.total * 100), // in halalas
-            currency: order.currency,
-            description: `Subscription: ${packageDetails?.name?.en}`,
-            publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
-            callback_url: `${window.location.origin}/payment/callback/${order._id}`, // Redirect back to summary after payment
-            methods: ['creditcard', 'stcpay'],
-            metadata: {
-              orderId: order._id,
-            },
-            on_completed: (payment: any) => {
-              console.log('Payment completed:', payment);
-            },
-          });
-        } catch (e) {
-          console.error('Moyasar init failed', e);
+  const tapCurrency = useMemo(() => {
+    const currency = order?.currency;
+    if (!currency) return null;
+    const normalized = String(currency).toUpperCase();
+    const mapped = (Currencies as any)[normalized];
+    return mapped ?? null;
+  }, [order?.currency]);
+
+  const paymentConfigError = useMemo(() => {
+    if (!TAP_PUBLIC_KEY) return 'Tap public key is missing. Set VITE_TAP_PUBLIC_KEY';
+    if (!Number.isFinite(amount) || amount <= 0) return 'Invalid payment amount';
+    if (!tapCurrency) return `Unsupported currency for Tap: ${String(order?.currency ?? '')}`;
+    return null;
+  }, [amount, order?.currency, tapCurrency]);
+
+  const canPay = tapReady && isCardValid && !isCreatingCharge && !isTokenizing && !tokenId;
+
+  const handlePay = () => {
+    if (paymentConfigError) {
+      toast.error(paymentConfigError);
+      return;
+    }
+    if (!tapReady) {
+      toast.error('Payment form is not ready yet.');
+      return;
+    }
+    if (!isCardValid) {
+      toast.error('Please complete valid card details.');
+      return;
+    }
+
+    startedChargeForTokenRef.current = null;
+    setTokenId(null);
+    setIsTokenizing(true);
+    try {
+      tokenize();
+    } catch (e) {
+      setIsTokenizing(false);
+      console.error('Tap tokenize failed', e);
+      toast.error('Could not start tokenization. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    const run = async () => {
+      if (!order || !tokenId) return;
+      if (startedChargeForTokenRef.current === tokenId) return;
+      startedChargeForTokenRef.current = tokenId;
+      try {
+        const redirectUrl = `${window.location.origin}/payment/callback/${order._id}`;
+        const res = await createTapCharge({
+          orderId: order._id,
+          tokenId,
+          redirectUrl,
+        }).unwrap();
+
+        const transactionUrl = res?.data?.transactionUrl;
+        const status = res?.data?.status;
+        if (transactionUrl) {
+          window.location.href = transactionUrl;
+          return;
         }
+
+        if (status === 'paid' || status === 'success') {
+          navigate(`/payment/success/${order._id}`);
+          return;
+        }
+
+        toast.error(res?.message || 'Payment initiation failed');
+      } catch (err: any) {
+        console.error('Tap charge init failed', err);
+        toast.error(err?.data?.message || 'Payment initiation failed');
       }
     };
 
-    script.onload = initMoyasar;
-
-    return () => {
-      // Cleanup if needed
-      // Note: removing script tag might breaks navigation if SPA
-    };
-  }, [order, packageDetails, navigate]);
+    run();
+  }, [order, tokenId, createTapCharge, navigate]);
 
   if (isLoading) {
     return (
@@ -114,8 +182,92 @@ const PaymentPage = () => {
             </span>
           </div>
 
-          {/* Moyasar Form Container */}
-          <div className="mysr-form"></div>
+          <div className="space-y-3">
+            {paymentConfigError ? (
+              <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {paymentConfigError}
+              </div>
+            ) : (
+              <TapCard
+                publicKey={TAP_PUBLIC_KEY}
+                transaction={{
+                  amount,
+                  currency: tapCurrency,
+                }}
+                fields={{
+                  cardHolder: true,
+                }}
+                customer={{
+                  id: (user as any)?._id,
+                  name: [
+                    {
+                      lang: Locale.EN,
+                      first: customerFirst,
+                      last: customerLast,
+                    },
+                  ],
+                  nameOnCard: `${customerFirst}${customerLast ? ` ${customerLast}` : ''}`,
+                  editable: true,
+                  contact: {
+                    email,
+                    phone: {
+                      countryCode: phoneCountryCode,
+                      number: phoneNumber,
+                    },
+                  },
+                }}
+                addons={{
+                  displayPaymentBrands: true,
+                  loader: true,
+                  saveCard: false,
+                }}
+                interface={{
+                  locale: Locale.EN,
+                  theme: Theme.LIGHT,
+                  edges: Edges.CURVED,
+                  direction: Direction.LTR,
+                }}
+                onReady={() => setTapReady(true)}
+                onValidInput={(v: any) => {
+                  if (typeof v === 'boolean') {
+                    setIsCardValid(v);
+                    return;
+                  }
+                  setIsCardValid(Boolean((v as any)?.isAllInputsValid));
+                }}
+                onInvalidInput={() => setIsCardValid(false)}
+                onError={(data: any) => {
+                  setIsTokenizing(false);
+                  console.error('Tap card SDK error', data);
+                  toast.error('Card form error. Please check card details.');
+                }}
+                onSuccess={(data: any) => {
+                  setIsTokenizing(false);
+                  const extractedTokenId =
+                    data?.id || data?.token?.id || data?.tokenId || data?.data?.id || data?.data?.token?.id;
+                  if (typeof extractedTokenId === 'string') {
+                    startedChargeForTokenRef.current = null;
+                    setTokenId(extractedTokenId);
+                  } else {
+                    toast.error('Failed to get card token from Tap');
+                  }
+                }}
+              />
+            )}
+
+            <Button type="button" className="w-full" disabled={!canPay} onClick={handlePay}>
+              {(isTokenizing || isCreatingCharge || !!tokenId) && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Pay
+            </Button>
+            {(isCreatingCharge || !!tokenId) && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Starting secure payment…</span>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

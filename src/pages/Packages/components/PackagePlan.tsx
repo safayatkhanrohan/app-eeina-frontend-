@@ -10,8 +10,7 @@ interface PackagePlanProps {
   packages: Package[];
   interval: 'monthly' | 'yearly';
   setInterval: (interval: 'monthly' | 'yearly') => void;
-  onBuyNow: (pkg: Package) => void;
-  isCreatingOrder: boolean;
+  onStartTrial: (pkg: Package) => void;
   activePackageId: string | undefined;
 }
 
@@ -19,8 +18,7 @@ const PackagePlan = ({
   packages,
   interval,
   setInterval,
-  onBuyNow,
-  isCreatingOrder,
+  onStartTrial,
   activePackageId,
 }: PackagePlanProps) => {
   const { t } = useLanguage();
@@ -74,16 +72,14 @@ const PackagePlan = ({
         <PlanCard
           packages={packages}
           interval={interval}
-          onBuyNow={onBuyNow}
-          isCreatingOrder={isCreatingOrder}
+          onStartTrial={onStartTrial}
           activePackageId={activePackageId}
         />
 
         <PlanFeaturesCard
           packages={packages}
-          onBuyNow={onBuyNow}
+          onStartTrial={onStartTrial}
           activePackageId={activePackageId}
-          isCreatingOrder={isCreatingOrder}
         />
       </div>
     </div>

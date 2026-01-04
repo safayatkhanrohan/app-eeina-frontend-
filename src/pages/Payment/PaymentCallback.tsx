@@ -2,11 +2,19 @@ import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useGetOrderByIdQuery } from '@/redux/Features/Package/PackageApi';
 
 const PaymentCallback = () => {
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const { data: orderResponse, isFetching } = useGetOrderByIdQuery(orderId, {
+    skip: !orderId,
+    pollingInterval: 2500,
+  });
+
+  const order = orderResponse?.data;
 
   console.log('PaymentCallback orderId:', orderId);
 
@@ -14,20 +22,31 @@ const PaymentCallback = () => {
     const status = searchParams.get('status');
     const message = searchParams.get('message');
 
+    // Provider-agnostic: if the gateway explicitly sends a status, respect it.
     if (status === 'paid' || status === 'success') {
       navigate(`/payment/success/${orderId}`);
-    } else if (status === 'failed') {
-      // Pass the message to the failed page
+      return;
+    }
+
+    if (status === 'failed') {
       const params = new URLSearchParams();
       if (message) params.append('message', message);
       navigate(`/payment/failed/${orderId}?${params.toString()}`);
-    } else {
-      // If no status is present, verify order status from API or default to failed if unknown
-      // For now, redirect to payment page
-      toast.error('Payment status unknown. Please try again.');
+      return;
+    }
+
+    // Tap typically redirects back with provider-specific params; rely on server webhook/order status.
+    if (order?.status === 'paid') {
+      navigate(`/payment/success/${orderId}`);
+      return;
+    }
+
+    // If we have an order and it's not paid, give the user a clear path.
+    if (order && !isFetching) {
+      toast.error('Payment not completed. Please try again.');
       navigate(`/payment/${orderId}`);
     }
-  }, [orderId, searchParams, navigate]);
+  }, [orderId, searchParams, navigate, order?.status, order, isFetching]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
