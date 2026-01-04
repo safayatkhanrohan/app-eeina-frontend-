@@ -53,7 +53,7 @@ const StartTrialPage = () => {
 
   // Handle successful trial start
   const handleSuccess = (data: any) => {
-    navigate('/dashboard', {
+    navigate('/', {
       state: {
         trialStarted: true,
         trialEndsAt: data?.subscription?.trialEndsAt,

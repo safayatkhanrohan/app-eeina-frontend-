@@ -16,7 +16,7 @@
  * - Public key only - secret key is on backend
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   TapCard,
   Currencies,
@@ -30,7 +30,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ShieldCheck, CreditCard, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { useStartTrialMutation } from '@/redux/Features/Payment/PaymentApi';
+import { useStartTrialMutation, useCreateCustomerMutation } from '@/redux/Features/Payment/PaymentApi';
 import { useAppSelector } from '@/hooks/hook';
 
 // Public key - safe to expose in frontend
@@ -97,6 +97,8 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
   const [isTokenizing, setIsTokenizing] = useState(false);
   const [tokenId, setTokenId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  console.log("can Submit:", tapReady, isCardValid, isTokenizing, !tokenId);
   
   // Ref to prevent duplicate API calls
   const processedTokenRef = useRef<string | null>(null);
@@ -106,6 +108,22 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
 
   // API mutation
   const [startTrial, { isLoading: isStartingTrial }] = useStartTrialMutation();
+  const [createCustomer, { isLoading: isCreatingCustomer }] = useCreateCustomerMutation();
+
+  // Ensure customer ID exists before rendering form
+  useEffect(() => {
+    const ensureCustomer = async () => {
+      if (user && !(user as any).tapCustomerId && !isCreatingCustomer) {
+        try {
+          await createCustomer().unwrap();
+        } catch (err) {
+          console.error('Failed to create Tap customer:', err);
+          setError('Failed to initialize payment system. Please refresh.');
+        }
+      }
+    };
+    ensureCustomer();
+  }, [user, createCustomer, isCreatingCustomer]);
 
   // Customer info for Tap SDK
   const customerFirst = user?.firstName || user?.fullName?.split(' ')?.[0] || 'Customer';
@@ -116,7 +134,7 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
   const phoneCountryCode = phoneNormalized.startsWith('+')
     ? (phoneNormalized.match(/^\+(\d{1,3})/)?.[1] ?? '966')
     : '966';
-  const phoneNumber = phoneNormalized.replace(/^\+?\d{1,4}/, '').replace(/\D/g, '') || '0000000000';
+  const phoneNumber = phoneNormalized.replace(/^\+?\d{1,4}/, '').replace(/\D/g, '') || '';
 
   // Determine currency for Tap SDK
   const tapCurrency = (Currencies as any)[currency.toUpperCase()] ?? Currencies.SAR;
@@ -124,16 +142,74 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
   // Calculate display amount (for display only - backend determines actual charge)
   const displayAmount = interval === 'yearly' ? (yearlyPrice || monthlyPrice * 12) : monthlyPrice;
 
+  // Memoize TapCard props to prevent unnecessary re-renders/re-initializations
+  const tapTransaction = useMemo(() => ({
+    amount: Math.max(displayAmount, 1),
+    currency: tapCurrency,
+  }), [displayAmount, tapCurrency]);
+
+  const tapFields = useMemo(() => ({
+    cardHolder: true,
+  }), []);
+
+  const tapCustomer = useMemo(() => {
+    const contact: any = {};
+    if (email) contact.email = email;
+    if (phoneNumber) {
+      contact.phone = {
+        countryCode: phoneCountryCode,
+        number: phoneNumber,
+      };
+    }
+
+    return {
+      name: [
+        {
+          lang: Locale.EN,
+          first: customerFirst,
+          last: customerLast || '-',
+        },
+      ],
+      nameOnCard: `${customerFirst} ${customerLast || ''}`.trim(),
+      editable: true,
+      contact: Object.keys(contact).length > 0 ? contact : undefined,
+    };
+  }, [customerFirst, customerLast, email, phoneCountryCode, phoneNumber]);
+
+  console.log('Tap Config:', { tapTransaction, tapCustomer });
+
+  const tapAddons = useMemo(() => ({
+    displayPaymentBrands: true,
+    loader: true,
+    saveCard: true,
+  }), []);
+
+  const tapInterface = useMemo(() => ({
+    locale: Locale.EN,
+    theme: Theme.LIGHT,
+    edges: Edges.CURVED,
+    direction: Direction.LTR,
+  }), []);
+
+  // Acceptance configuration - supported cards and payment methods
+  const tapAcceptance = useMemo(() => ({
+    supportedBrands: ['VISA', 'MASTERCARD', 'AMERICAN_EXPRESS', 'MADA'],
+    supportedCards: ['DEBIT', 'CREDIT'],
+  }), []);
+
   // Configuration check
   const configError = !TAP_PUBLIC_KEY ? 'Tap public key is missing. Contact support.' : null;
 
   // Can submit check
   const canSubmit = tapReady && isCardValid && !isTokenizing && !isStartingTrial && !tokenId && !configError;
 
+  console.log('IS CARD VALID:', isCardValid, 'CAN SUBMIT:', canSubmit);
+
   /**
    * Handle form submission - triggers card tokenization
    */
   const handleSubmit = useCallback(() => {
+    console.log("StartTrialCardForm handleSubmit", canSubmit);
     if (!canSubmit) return;
 
     setError(null);
@@ -245,57 +321,34 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
           <div className="space-y-4">
             <TapCard
               publicKey={TAP_PUBLIC_KEY}
-              transaction={{
-                amount: displayAmount,
-                currency: tapCurrency,
-              }}
-              fields={{
-                cardHolder: true,
-              }}
-              customer={{
-                // Only pass id if user already has a Tap customer ID
-                // Passing MongoDB _id causes "Customer id is invalid" error
-                ...(((user as any)?.tapCustomerId) && { id: (user as any).tapCustomerId }),
-                name: [
-                  {
-                    lang: Locale.EN,
-                    first: customerFirst,
-                    last: customerLast,
-                  },
-                ],
-                nameOnCard: `${customerFirst}${customerLast ? ` ${customerLast}` : ''}`,
-                editable: true,
-                contact: {
-                  email,
-                  phone: {
-                    countryCode: phoneCountryCode,
-                    number: phoneNumber,
-                  },
-                },
-              }}
-              addons={{
-                displayPaymentBrands: true,
-                loader: true,
-                saveCard: false,
-              }}
-              interface={{
-                locale: Locale.EN,
-                theme: Theme.LIGHT,
-                edges: Edges.CURVED,
-                direction: Direction.LTR,
-              }}
+              transaction={tapTransaction}
+              fields={tapFields}
+              customer={tapCustomer}
+              addons={tapAddons}
+              interface={tapInterface}
+              acceptance={tapAcceptance}
               onReady={() => {
                 setTapReady(true);
                 setError(null);
               }}
               onValidInput={(v: any) => {
+                console.log('Tap onValidInput:', v);
                 if (typeof v === 'boolean') {
                   setIsCardValid(v);
                   return;
                 }
-                setIsCardValid(Boolean((v as any)?.isAllInputsValid));
+                // Check for isAllInputsValid or fallback to truthy if object
+                const isValid = v?.isAllInputsValid ?? true; 
+                setIsCardValid(Boolean(isValid));
               }}
-              onInvalidInput={() => setIsCardValid(false)}
+              onInvalidInput={(error: any) => {
+                console.log('Tap onInvalidInput fired', error);
+                // Only set invalid if there is an actual error object/true
+                // If error is false, it means the invalid state is cleared
+                if (error) {
+                  setIsCardValid(false);
+                }
+              }}
               onError={(data: any) => {
                 setIsTokenizing(false);
                 console.error('Tap card SDK error:', data);

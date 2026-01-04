@@ -70,6 +70,20 @@ interface CardsResponse {
 export const PaymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     /**
+     * Create or retrieve Tap customer ID
+     * 
+     * Used to initialize Tap SDK with a valid customer ID
+     */
+    createCustomer: builder.mutation<{ data: { tapCustomerId: string }; message: string }, void>({
+      query: () => ({
+        url: '/payments/customer',
+        method: 'POST',
+        credentials: 'include',
+      }),
+      invalidatesTags: ['User' as any],
+    }),
+
+    /**
      * Start a free trial with card verification
      * 
      * This endpoint:
@@ -189,4 +203,5 @@ export const {
   useGetSubscriptionStatusQuery,
   useGetSavedCardsQuery,
   useDeleteCardMutation,
+  useCreateCustomerMutation,
 } = PaymentApi;

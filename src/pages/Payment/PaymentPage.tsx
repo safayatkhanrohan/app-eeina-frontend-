@@ -198,7 +198,8 @@ const PaymentPage = () => {
                   cardHolder: true,
                 }}
                 customer={{
-                  id: (user as any)?._id,
+                  // Only pass id if user already has a Tap customer ID
+                  ...(((user as any)?.tapCustomerId) && { id: (user as any).tapCustomerId }),
                   name: [
                     {
                       lang: Locale.EN,
@@ -255,12 +256,12 @@ const PaymentPage = () => {
               />
             )}
 
-            <Button type="button" className="w-full" disabled={!canPay} onClick={handlePay}>
+            {/* <Button type="button" className="w-full" disabled={!canPay} onClick={handlePay}>
               {(isTokenizing || isCreatingCharge || !!tokenId) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Pay
-            </Button>
+            </Button> */}
             {(isCreatingCharge || !!tokenId) && (
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <Loader2 className="w-4 h-4 animate-spin" />
