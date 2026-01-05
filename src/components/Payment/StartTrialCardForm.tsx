@@ -37,7 +37,7 @@ import { useAppSelector } from '@/hooks/hook';
 // Public key - safe to expose in frontend
 const TAP_PUBLIC_KEY = import.meta.env.VITE_TAP_PUBLIC_KEY;
 
-export interface StartTrialCardFormProps {
+export interface PaymentFormProps {
   /** Package/plan ID to subscribe to */
   packageId: string;
   /** Package name for display */
@@ -71,7 +71,7 @@ export interface StartTrialCardFormProps {
  *
  * @example
  * ```tsx
- * <StartTrialCardForm
+ * <PaymentForm
  *   packageId="pkg_123"
  *   packageName="Premium"
  *   monthlyPrice={29.99}
@@ -80,7 +80,7 @@ export interface StartTrialCardFormProps {
  * />
  * ```
  */
-export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
+export const PaymentForm: React.FC<PaymentFormProps> = ({
   packageId,
   packageName = 'Premium',
   monthlyPrice = 0,
@@ -445,4 +445,4 @@ export const StartTrialCardForm: React.FC<StartTrialCardFormProps> = ({
   );
 };
 
-export default StartTrialCardForm;
+export default PaymentForm;

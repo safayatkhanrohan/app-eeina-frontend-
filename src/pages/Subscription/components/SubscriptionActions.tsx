@@ -1,7 +1,7 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Subscription } from "../types";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Subscription } from '../types';
 import {
   ArrowUpCircle,
   ArrowDownCircle,
@@ -10,7 +10,7 @@ import {
   Power,
   CreditCard,
   Settings2,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface SubscriptionActionsProps {
   subscription: Subscription;
@@ -41,7 +41,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
       </CardHeader>
       <CardContent className="pt-6">
         <div className="flex flex-wrap gap-4">
-          {subscription.status === "past_due" && (
+          {subscription.status === 'past_due' && (
             <Button
               onClick={onRetryPayment}
               className="bg-yellow-500 hover:bg-yellow-600 text-white shadow-sm"
@@ -50,8 +50,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
             </Button>
           )}
 
-          {(subscription.status === "active" ||
-            subscription.status === "trialing") && (
+          {(subscription.status === 'active' || subscription.status === 'trial') && (
             <>
               {/* Upgrade Button - Primary Action */}
               <Button
@@ -103,10 +102,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
           )}
 
           {/* Inactive State Reactivation */}
-          {!(
-            subscription.status === "active" ||
-            subscription.status === "trialing"
-          ) && (
+          {!(subscription.status === 'active' || subscription.status === 'trial') && (
             <Button
               onClick={onReactivate}
               className="bg-primaryColor hover:bg-primaryColor/90 text-white shadow-sm w-full sm:w-auto"

@@ -1,8 +1,15 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { PaymentMethod } from "../types";
-import { CreditCard, Trash2, Plus, Lock } from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { PaymentMethod } from '../types';
+import { CreditCard, Trash2, Plus, Lock } from 'lucide-react';
+
+// Card brand icons
+import VisaIcon from '@/assets/Icons/visa.svg?react';
+import MastercardIcon from '@/assets/Icons/mastercard.svg?react';
+import MadaIcon from '@/assets/Icons/mada.svg?react';
+import AmexIcon from '@/assets/Icons/amex.svg?react';
+import DefaultCardIcon from '@/assets/Icons/creditCard.svg?react';
 
 interface PaymentMethodsProps {
   paymentMethods: PaymentMethod[];
@@ -10,6 +17,50 @@ interface PaymentMethodsProps {
   onRemoveMethod: (id: string) => void;
   onSetDefault: (id: string) => void;
 }
+
+/**
+ * Get the appropriate card brand icon based on brand name
+ */
+const getCardBrandIcon = (brand: string) => {
+  const brandLower = brand?.toLowerCase() || '';
+
+  switch (brandLower) {
+    case 'visa':
+      return <VisaIcon className="w-10 h-7" />;
+    case 'mastercard':
+      return <MastercardIcon className="w-10 h-7" />;
+    case 'mada':
+      return <MadaIcon className="w-10 h-7" />;
+    case 'amex':
+    case 'american_express':
+    case 'american express':
+      return <AmexIcon className="w-10 h-7" />;
+    default:
+      return <DefaultCardIcon className="w-10 h-7" />;
+  }
+};
+
+/**
+ * Get display name for card brand
+ */
+const getCardBrandName = (brand: string) => {
+  const brandLower = brand?.toLowerCase() || '';
+
+  switch (brandLower) {
+    case 'visa':
+      return 'Visa';
+    case 'mastercard':
+      return 'Mastercard';
+    case 'mada':
+      return 'Mada';
+    case 'amex':
+    case 'american_express':
+    case 'american express':
+      return 'American Express';
+    default:
+      return brand || 'Card';
+  }
+};
 
 export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
   paymentMethods,
@@ -39,27 +90,19 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
             key={method.id}
             className={`group relative flex items-center justify-between p-4 border rounded-xl transition-all ${
               method.isDefault
-                ? "bg-primaryColor/5 border-primaryColor/20 ring-1 ring-primaryColor/10"
-                : "bg-white border-gray-200 hover:border-gray-300"
+                ? 'bg-primaryColor/5 border-primaryColor/20 ring-1 ring-primaryColor/10'
+                : 'bg-white border-gray-200 hover:border-gray-300'
             }`}
           >
             <div className="flex items-center gap-4">
-              <div
-                className={`p-2.5 rounded-lg ${
-                  method.isDefault
-                    ? "bg-white text-primaryColor"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <CreditCard className="h-5 w-5" />
+              <div className={`p-1.5 rounded-lg ${method.isDefault ? 'bg-white' : 'bg-gray-50'}`}>
+                {getCardBrandIcon(method.brand || '')}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-semibold text-gray-900 capitalize">
-                    {method.brand}{" "}
-                    <span className="text-gray-400 text-sm font-normal">
-                      • {method.last4}
-                    </span>
+                  <p className="font-semibold text-gray-900">
+                    {getCardBrandName(method.brand || '')}{' '}
+                    <span className="text-gray-400 text-sm font-normal">•••• {method.last4}</span>
                   </p>
                   {method.isDefault && (
                     <span className="px-2 py-0.5 text-[10px] font-bold text-primaryColor bg-white border border-primaryColor/20 rounded-full uppercase tracking-wide">
@@ -68,7 +111,7 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Expires {method.expiryMonth}/{method.expiryYear}
+                  Expires {String(method.expiryMonth).padStart(2, '0')}/{method.expiryYear}
                 </p>
               </div>
             </div>
@@ -99,12 +142,8 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
         {paymentMethods.length === 0 && (
           <div className="text-center py-8 px-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50">
             <CreditCard className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm font-medium text-gray-500">
-              No payment methods
-            </p>
-            <p className="text-xs text-gray-400 mt-1">
-              Add a card to process payments
-            </p>
+            <p className="text-sm font-medium text-gray-500">No payment methods</p>
+            <p className="text-xs text-gray-400 mt-1">Add a card to process payments</p>
           </div>
         )}
 

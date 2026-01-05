@@ -3,6 +3,7 @@
  *
  * This module provides API hooks for:
  * - Getting saved payment methods
+ * - Adding new payment methods
  * - Deleting payment methods
  * - Setting default payment method
  */
@@ -17,7 +18,7 @@ export interface PaymentMethod {
   userId: string;
   status: 'active' | 'inactive';
   token: string;
-  cardType: 'visa' | 'mastercard' | 'mada' | 'other';
+  cardType: 'visa' | 'mastercard' | 'mada' | 'amex' | 'other';
   last4: string;
   expMonth: number;
   expYear: number;
@@ -38,6 +39,14 @@ interface SetDefaultResponse {
   paymentMethod: PaymentMethod;
 }
 
+interface AddPaymentMethodRequest {
+  tokenId: string;
+}
+
+interface AddPaymentMethodResponse {
+  paymentMethod: PaymentMethod;
+}
+
 /**
  * Payment Methods API endpoints
  */
@@ -53,6 +62,24 @@ export const PaymentMethodsApi = baseApi.injectEndpoints({
         credentials: 'include',
       }),
       providesTags: ['PaymentMethods'],
+    }),
+
+    /**
+     * Add a new payment method
+     *
+     * @param tokenId - Card token from Tap SDK (tok_xxx)
+     */
+    addPaymentMethod: builder.mutation<
+      { data: AddPaymentMethodResponse; message: string },
+      AddPaymentMethodRequest
+    >({
+      query: (body) => ({
+        url: '/payment-methods',
+        method: 'POST',
+        body,
+        credentials: 'include',
+      }),
+      invalidatesTags: ['PaymentMethods'],
     }),
 
     /**
@@ -99,6 +126,10 @@ export const PaymentMethodsApi = baseApi.injectEndpoints({
  * // Get payment methods
  * const { data } = useGetPaymentMethodsQuery();
  *
+ * // Add a new payment method
+ * const [addMethod] = useAddPaymentMethodMutation();
+ * await addMethod({ tokenId: 'tok_xxx' });
+ *
  * // Delete a payment method
  * const [deleteMethod] = useDeletePaymentMethodMutation();
  * await deleteMethod('payment_method_id');
@@ -110,6 +141,7 @@ export const PaymentMethodsApi = baseApi.injectEndpoints({
  */
 export const {
   useGetPaymentMethodsQuery,
+  useAddPaymentMethodMutation,
   useDeletePaymentMethodMutation,
   useSetDefaultPaymentMethodMutation,
 } = PaymentMethodsApi;

@@ -16,6 +16,8 @@ export const App = () => {
 
   const { data: apiUser, isError } = useGetMeQuery();
 
+  console.log('erorr', isError);
+
   useEffect(() => {
     if (apiUser) dispatch(setUser(apiUser.data));
     if (isError) dispatch(logout());

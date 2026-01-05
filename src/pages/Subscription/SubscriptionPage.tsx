@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubscriptionOverview } from './components/SubscriptionOverview';
 import { SubscriptionActions } from './components/SubscriptionActions';
 import { PaymentMethods } from './components/PaymentMethods';
 import { BillingHistory } from './components/BillingHistory';
+import { AddPaymentMethodModal } from '@/components/Payment/AddPaymentMethodModal';
 import { Plan, Invoice } from './types';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/hooks/hook';
@@ -25,6 +26,9 @@ export const SubscriptionPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
 
+  // Modal state for adding payment method
+  const [isAddPaymentModalOpen, setIsAddPaymentModalOpen] = useState(false);
+
   // Fetch subscription for current user
   const {
     data: subscriptionData,
@@ -33,8 +37,11 @@ export const SubscriptionPage: React.FC = () => {
   } = useGetSubscriptionsQuery({});
 
   // Fetch payment methods
-  const { data: paymentMethodsData, isLoading: isLoadingPaymentMethods } =
-    useGetPaymentMethodsQuery();
+  const {
+    data: paymentMethodsData,
+    isLoading: isLoadingPaymentMethods,
+    refetch: refetchPaymentMethods,
+  } = useGetPaymentMethodsQuery();
 
   // Mutations
   const [cancelSubscription, { isLoading: isCancelling }] = useCancelSubscriptionMutation();
@@ -63,9 +70,12 @@ export const SubscriptionPage: React.FC = () => {
   const plan: Plan | null = activeSubscription?.packageId
     ? {
         id: activeSubscription.packageId._id,
-        name: activeSubscription.packageId.name || activeSubscription.packageId.slug || 'Plan',
-        price: 0, // Would need to fetch from package details
-        currency: 'USD',
+        name: activeSubscription.packageId.slug || 'Plan',
+        price:
+          activeSubscription.billingPeriod === 'monthly'
+            ? activeSubscription.packageId.baseMonthlyPrice || 0
+            : activeSubscription.packageId.baseYearlyPrice || 0,
+        currency: 'SAR',
         billingPeriod: activeSubscription.billingPeriod === 'monthly' ? 'month' : 'year',
         features: [],
       }
@@ -115,7 +125,11 @@ export const SubscriptionPage: React.FC = () => {
   };
 
   const handleAddPaymentMethod = () => {
-    navigate('/start-trial');
+    setIsAddPaymentModalOpen(true);
+  };
+
+  const handlePaymentMethodAdded = () => {
+    refetchPaymentMethods();
   };
 
   const handleRemovePaymentMethod = async (id: string) => {
@@ -206,6 +220,13 @@ export const SubscriptionPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Payment Method Modal */}
+      <AddPaymentMethodModal
+        isOpen={isAddPaymentModalOpen}
+        onClose={() => setIsAddPaymentModalOpen(false)}
+        onSuccess={handlePaymentMethodAdded}
+      />
     </div>
   );
 };

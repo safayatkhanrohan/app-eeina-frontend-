@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { StartTrialCardForm } from '@/components/Payment/StartTrialCardForm';
+import PaymentForm from '@/components/Payment/StartTrialCardForm';
 import { useGetActivePackagesQuery } from '@/redux/Features/Package/PackageApi';
 import { useGetSubscriptionsQuery } from '@/redux/Features/Subscriptions/subscriptionApi';
 import { useAppSelector } from '@/hooks/hook';
@@ -232,7 +232,7 @@ const StartTrialPage = () => {
           {/* Right: Card Form */}
           <div>
             {selectedPackage && (
-              <StartTrialCardForm
+              <PaymentForm
                 packageId={selectedPackage._id}
                 packageName={
                   typeof selectedPackage.name === 'object'
