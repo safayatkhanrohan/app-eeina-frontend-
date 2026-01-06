@@ -48,7 +48,7 @@ export const Footer = () => {
 
   const year = new Date().getFullYear();
   return (
-    <footer className="relative w-full lg:mt-10 xl:mt-0 xl2:mt-20 bg-primaryColor xl:bg-transparent ">
+    <footer className="overflow-auto relative w-full lg:mt-10 xl:mt-0 xl2:mt-20 bg-primaryColor xl:bg-transparent ">
       <div className="container mx-auto max-w-6xl xl2:max-w-7xl px-3 ">
         <FooterWave />
 
@@ -58,7 +58,7 @@ export const Footer = () => {
         <div className="relative z-10 pt-10 xl:pt-48  flex flex-col-reverse lg:flex-col">
           <Link to={"/"} className="hidden w-[149px] h-[100px] lg:inline-block">
             <img
-              src="./eeinaaWhitlogo.png"
+              src="/eeinaaWhitlogo.png"
               className="w-full h-full object-cover"
               alt="logo"
             />
@@ -75,7 +75,7 @@ export const Footer = () => {
                     className="flex-1 max-w-[66px] h-[50px] sm:max-w-[80px] sm:h-[70px] lg:w-[149px] lg:h-[100px] block lg:hidden"
                   >
                     <img
-                      src="./eeinaaWhitlogo.png"
+                      src="/eeinaaWhitlogo.png"
                       className="w-full h-full object-cover"
                       alt="logo"
                     />

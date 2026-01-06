@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { useAddPaymentMethodMutation } from '@/redux/Features/PaymentMethods/PaymentMethodsApi';
 import { useCreateCustomerMutation } from '@/redux/Features/Payment/PaymentApi';
 import { useAppSelector } from '@/hooks/hook';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Public key - safe to expose in frontend
 const TAP_PUBLIC_KEY = import.meta.env.VITE_TAP_PUBLIC_KEY;
@@ -50,6 +51,7 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
   onSuccess,
 }) => {
   // State
+  const {t} = useLanguage()
   const [tapReady, setTapReady] = useState(false);
   const [isCardValid, setIsCardValid] = useState(false);
   const [isTokenizing, setIsTokenizing] = useState(false);
@@ -255,10 +257,10 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
         <DialogHeader>
           <div className="flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-primaryColor" />
-            <DialogTitle>Add Payment Method</DialogTitle>
+            <DialogTitle>{t.subscription.AddPaymenttitle}</DialogTitle>
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            Add a new credit or debit card for future payments.
+           {t.subscription.AddPaymentdescription}
           </p>
         </DialogHeader>
 
@@ -267,9 +269,9 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
           <div className="bg-blue-50 p-3 rounded-md flex items-center gap-3 text-blue-700 border border-blue-100">
             <ShieldCheck className="w-5 h-5 flex-shrink-0" />
             <div className="text-sm">
-              <p className="font-medium">Your card is secure</p>
+              <p className="font-medium">{t.subscription.secureBadgeTitle}</p>
               <p className="text-blue-600 text-xs">
-                Card details are encrypted and securely processed by Tap Payments.
+              {t.subscription.secureBadgeDesc}
               </p>
             </div>
           </div>
@@ -312,16 +314,10 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
                 }}
                 onError={(data: any) => {
                   setIsTokenizing(false);
-                  console.error('Tap card SDK error:', data);
-                  setError('Card form error. Please check your card details.');
+                  setError(t.subscription.errorDefault);
                 }}
                 onSuccess={(data: any) => {
                   setIsTokenizing(false);
-                  console.log(
-                    'AddPaymentMethodModal - Tap SDK onSuccess FULL response:',
-                    JSON.stringify(data, null, 2),
-                  );
-
                   const extractedTokenId =
                     data?.id ||
                     data?.token?.id ||
@@ -329,7 +325,6 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
                     data?.data?.id ||
                     data?.data?.token?.id;
 
-                  console.log('AddPaymentMethodModal - Extracted tokenId:', extractedTokenId);
 
                   if (typeof extractedTokenId === 'string' && extractedTokenId.startsWith('tok_')) {
                     setTokenId(extractedTokenId);
@@ -355,7 +350,7 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
                   onClick={onClose}
                   disabled={isProcessing}
                 >
-                  Cancel
+                  {t.common.cancel}
                 </Button>
                 <Button
                   type="button"
@@ -364,7 +359,7 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
                   onClick={handleSubmit}
                 >
                   {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isProcessing ? 'Adding...' : 'Add Card'}
+                  {isProcessing ? `${t.common.adding}`: `${t.subscription.addCard}`}
                 </Button>
               </div>
 
@@ -372,7 +367,7 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({
               {isProcessing && (
                 <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>{isTokenizing ? 'Securing your card...' : 'Saving payment method...'}</span>
+                  <span>{isTokenizing ? `${t.subscription.processingSecuring}` : `${t.subscription.processingSaving}`}</span>
                 </div>
               )}
             </div>

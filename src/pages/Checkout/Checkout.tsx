@@ -29,7 +29,7 @@ const Checkout = () => {
       </div>
 
       <div className="flex flex-col gap-3 w-full max-w-sm">
-        <Button className="bg-primaryColor hover:bg-green-700 text-white rounded-full">
+        <Button className="bg-primaryColor hover:bg-[#539d29] text-white rounded-full">
           {language == 'ar' ? 'تابع إلى' : 'Continue to'}
           {' ' + storeName}
         </Button>

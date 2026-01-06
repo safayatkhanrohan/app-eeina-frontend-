@@ -9,6 +9,7 @@ import {
   AlertCircle,
   ShieldCheck,
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SubscriptionOverviewProps {
   subscription: Subscription;
@@ -19,7 +20,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
   subscription,
   plan,
 }) => {
-  // const { t } = useLanguage();
+  const { t } = useLanguage();
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -77,7 +78,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-medium text-primaryColor flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5" /> Current Plan
+              <ShieldCheck className="w-5 h-5" /> {t.subscription.currentPlanTitle}
             </h3>
             <div className="mt-1 flex items-baseline gap-2">
               <h2 className="text-3xl font-bold text-gray-900">{plan.name}</h2>
@@ -103,7 +104,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 mb-0.5">
-                Recurring Price
+                {t.subscription.recurringPrice}
               </p>
               <p className="text-lg font-semibold text-gray-900">
                 {plan.currency.toUpperCase()} {plan.price.toFixed(2)}{" "}
@@ -121,11 +122,11 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 mb-0.5">
-                Next Payment
+               {t.subscription.nextPayment}
               </p>
               <p className="text-lg font-semibold text-gray-900">
                 {subscription.cancelAtPeriodEnd
-                  ? "No upcoming payment"
+                  ? `${t.subscription.noUpcomingPayment}`
                   : formatDate(subscription.nextPaymentDate)}
               </p>
             </div>
@@ -138,7 +139,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 mb-0.5">
-                Member Since
+               {t.subscription.memberSince}
               </p>
               <p className="text-base font-medium text-gray-700">
                 {formatDate(subscription.currentPeriodStart)}
@@ -159,7 +160,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 mb-0.5">
-                Auto-Renewal
+               {t.subscription.autoRenewal}
               </p>
               <p
                 className={`text-base font-medium ${
@@ -169,8 +170,8 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
                 }`}
               >
                 {subscription.cancelAtPeriodEnd
-                  ? "Disabled (Cancels at end of period)"
-                  : "Active"}
+                  ?`${t.subscription.autoRenewDisabled}`
+                  :`${t.subscription.autoRenewActive}`}
               </p>
             </div>
           </div>
@@ -182,10 +183,10 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
               <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
               <div>
                 <p className="text-sm font-semibold text-blue-900">
-                  Your Free Trial is Active
+                  {t.subscription.trialActiveTitle}
                 </p>
                 <p className="text-xs text-blue-700">
-                  Enjoying the premium features?
+                {t.subscription.trialActiveDesc}
                 </p>
               </div>
             </div>
@@ -198,7 +199,7 @@ export const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = ({
                 )}
               </p>
               <p className="text-[10px] uppercase font-bold tracking-wider text-blue-400">
-                Days Left
+              {t.subscription.daysLeft}
               </p>
             </div>
           </div>

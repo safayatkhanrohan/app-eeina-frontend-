@@ -19,7 +19,7 @@ const Foodallergies = () => {
       <h2 className="font-semibold text-base lg:text-[20px] text-[#121212]">
         {t.GoalsDashboard.ChooseFoodAllergies}
       </h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 lg:gap-5">
+      <div className="grid grid-cols-2 xl2:grid-cols-3 gap-2 lg:gap-3">
         {options.map((option) => {
           const isSelected = selected === option.value;
 
@@ -27,7 +27,7 @@ const Foodallergies = () => {
             <Button
               key={option.value}
               onClick={() => setSelected(option.value)}
-              className={`py-[1.4rem]   font-normal text-[14px] sm:text-base 
+              className={`py-[1.4rem]  font-normal text-[14px] sm:text-base 
                       ${isSelected ? 'bg-[#6AB240] text-white' : 'bg-white text-[#84818A] border border-[#DCDBDD]'}
                       hover:bg-[#6AB240] hover:text-white
                     `}

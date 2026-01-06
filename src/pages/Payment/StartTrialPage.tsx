@@ -18,6 +18,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const StartTrialPage = () => {
   const navigate = useNavigate();
+  const {t} = useLanguage()
   const [searchParams] = useSearchParams();
   const user = useAppSelector((s) => s.auth.user);
   const { language } = useLanguage();
@@ -92,17 +93,17 @@ const StartTrialPage = () => {
             <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8 text-yellow-600" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Already Subscribed</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.payment.alreadySubscribed}</h1>
             <p className="text-gray-600 mb-6">
               You already have an active {activeSubscription.status === 'trial' ? 'trial ' : ''}
               subscription to {activeSubscription.packageId?.name || 'Premium'}.
             </p>
             <div className="space-y-3">
               <Button onClick={() => navigate('/subscription')} className="w-full">
-                Manage Subscription
+               {t.payment.manageSubscription}
               </Button>
               <Button variant="outline" onClick={() => navigate('/')} className="w-full">
-                Go to Home
+                {t.payment.goHome}
               </Button>
             </div>
           </div>
@@ -118,11 +119,11 @@ const StartTrialPage = () => {
         <div className="mb-8">
           <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            {t.payment.back}
           </Button>
-          <h1 className="text-3xl font-bold text-gray-900">Start Your Free Trial</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t.payment.FreeTrialtitle}</h1>
           <p className="mt-2 text-gray-600">
-            Try premium features free for 7 days. No charge until trial ends.
+           {t.payment.FreeTrialdescription}
           </p>
         </div>
 
@@ -140,7 +141,7 @@ const StartTrialPage = () => {
                 )}
                 onClick={() => setSelectedbillingPeriod('monthly')}
               >
-                Monthly
+                {t.payment.monthly}
               </button>
               <button
                 className={cn(
@@ -151,8 +152,8 @@ const StartTrialPage = () => {
                 )}
                 onClick={() => setSelectedbillingPeriod('yearly')}
               >
-                Yearly
-                <span className="ml-1 text-xs text-green-600 font-normal">Save 20%</span>
+                {t.payment.yearly}
+                <span className="ml-1 text-xs text-green-600 font-normal">{t.payment.save} 20%</span>
               </button>
             </div>
 
@@ -187,14 +188,14 @@ const StartTrialPage = () => {
                             </h3>
                             {pkg.isPopular && (
                               <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-full">
-                                Popular
+                                {t.payment.popular}
                               </span>
                             )}
                           </div>
                           <p className="text-gray-500 text-sm mt-1">
                             {typeof pkg.description === 'object'
                               ? pkg.description[language]
-                              : pkg.description || 'Full access to all features'}
+                              : pkg.description || t.payment.fullAccess}
                           </p>
                         </div>
                         <div
@@ -206,10 +207,10 @@ const StartTrialPage = () => {
                           {isSelected && <Check className="w-3 h-3 text-white" />}
                         </div>
                       </div>
-                      <div className="mt-3">
-                        <span className="text-2xl font-bold">SAR {displayPrice.toFixed(0)}</span>
+                      <div className="mt-3 text-start">
+                        <span className="text-2xl font-bold">{t.payment.currencyLabel} {displayPrice.toFixed(0)}</span>
                         <span className="text-gray-500">
-                          /{selectedbillingPeriod === 'yearly' ? 'year' : 'month'}
+                          /{selectedbillingPeriod === 'yearly' ? `${t.payment.perYear}` : `${t.payment.perMonth}` }
                         </span>
                       </div>
                       {/* Features */}

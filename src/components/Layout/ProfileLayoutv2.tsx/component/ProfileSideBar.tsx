@@ -33,23 +33,6 @@ const sections = getProfileSections(language, t);
     <aside className="h-[574px] flex flex-col bg-white rounded-[24px] border border-[#E1E1E1] shadow-sm py-8 px-5 gap-8">
       {sections.map((section) => {
         const isOpen = openSection === section.id;
-        // if (section.id === 'saved') {
-        //   return (
-        //     <NavLink
-        //       key={section.id}
-        //       to="/saved"
-        //       className="flex items-center justify-between text-base text-[#22212C] font-semibold px-2 py-2"
-        //     >
-        //       <div className="flex items-center gap-2">
-        //         {section.icon}
-        //         <span>{section.title}</span>
-        //       </div>
-        //       <span className="px-3  flex items-center justify-center rounded-[4px] bg-[#191D23] text-white text-base font-semibold">
-        //         {user?.savedRecipes?.length}
-        //       </span>
-        //     </NavLink>
-        //   );
-        // }
         return (
           <div key={section.id} className="relative">
             <button

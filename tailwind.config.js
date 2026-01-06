@@ -3,8 +3,6 @@ module.exports = {
   theme: {
   	extend: {
   		colors: {
-  			'blue-gray200': 'var(--blue-gray200)',
-  			'cool-gray50': 'var(--cool-gray50)',
   			'gray-400': 'var(--gray-400)',
   			'gray-500': 'var(--gray-500)',
   			primaryColor: '#6AB240',
@@ -52,22 +50,22 @@ module.exports = {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
-  		fontFamily: {
-  			'bold-11px-CAP': 'var(--bold-11px-CAP-font-family)',
-  			'regular-13px': 'var(--regular-13px-font-family)',
-  			'regular-16px': 'var(--regular-16px-font-family)',
-  			'semi-bold-16px': 'var(--semi-bold-16px-font-family)',
-  			'text-sm-normal': 'var(--text-sm-normal-font-family)',
-  			sans: [
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif',
-  				'Apple Color Emoji"',
-  				'Segoe UI Emoji"',
-  				'Segoe UI Symbol"',
-  				'Noto Color Emoji"'
-  			]
-  		},
+  		// fontFamily: {
+  		// 	'bold-11px-CAP': 'var(--bold-11px-CAP-font-family)',
+  		// 	'regular-13px': 'var(--regular-13px-font-family)',
+  		// 	'regular-16px': 'var(--regular-16px-font-family)',
+  		// 	'semi-bold-16px': 'var(--semi-bold-16px-font-family)',
+  		// 	'text-sm-normal': 'var(--text-sm-normal-font-family)',
+  		// 	sans: [
+  		// 		'ui-sans-serif',
+  		// 		'system-ui',
+  		// 		'sans-serif',
+  		// 		'Apple Color Emoji"',
+  		// 		'Segoe UI Emoji"',
+  		// 		'Segoe UI Symbol"',
+  		// 		'Noto Color Emoji"'
+  		// 	]
+  		// },
   		screens: {
   			xl2: '1440px'
   		},

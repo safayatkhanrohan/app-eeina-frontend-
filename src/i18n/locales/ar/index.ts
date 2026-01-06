@@ -20,6 +20,8 @@ import { goalSetup } from './goalSetup';
 import { GoalsDashboard } from './GoalsDashboard';
 import { nutritionist } from './nutritionist';
 import { packageTrans } from './package';
+import { subscription } from './Subscription';
+import { paymentTrans } from './payment';
 
 export const ar: Translation = {
   nav: navigation,
@@ -43,4 +45,6 @@ export const ar: Translation = {
   GoalsDashboard: GoalsDashboard,
   nutritionist: nutritionist,
   Package: packageTrans,
+  subscription:subscription,
+  payment:paymentTrans
 };

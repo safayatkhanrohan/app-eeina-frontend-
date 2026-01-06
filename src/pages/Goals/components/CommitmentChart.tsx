@@ -11,13 +11,14 @@ import {
 } from 'recharts';
 import { format, subDays, isSameDay, startOfDay } from 'date-fns';
 import { MealLog } from '../types/type';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CommitmentChartProps {
   mealLog?: MealLog[];
 }
 
 const CommitmentChart: React.FC<CommitmentChartProps> = ({ mealLog = [] }) => {
-  console.log('mealLog', mealLog);
+  const {t} = useLanguage()
   const chartData = useMemo(() => {
     const today = new Date();
     const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -99,12 +100,12 @@ const CommitmentChart: React.FC<CommitmentChartProps> = ({ mealLog = [] }) => {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h3 className="text-lg font-bold text-gray-900">Weekly Commitment Indicator</h3>
-          <p className="text-sm text-gray-500">Your 7-day adherence history.</p>
+          <h3 className="text-lg font-bold text-gray-900">{t.goals.Commitmenttitle}</h3>
+          <p className="text-sm text-gray-500">{t.goals.Commitmentsubtitle}</p>
         </div>
         <div className="bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 flex flex-col items-end">
           <span className="text-[10px] uppercase font-semibold text-gray-400 tracking-wider">
-            Weekly Avg
+           {t.goals.weeklyAvg}
           </span>
           <span className="text-xl font-bold text-gray-900">{weeklyAverage}%</span>
         </div>
@@ -156,11 +157,11 @@ const CommitmentChart: React.FC<CommitmentChartProps> = ({ mealLog = [] }) => {
       {/* Legend */}
       <div className="mt-4 flex flex-wrap gap-4 items-center justify-center border-t border-gray-100 pt-4">
         {[
-          { label: 'Perfect (100%)', color: '#10B981' },
-          { label: 'Good (75%+)', color: '#34D399' },
-          { label: 'Fair (50%+)', color: '#FBBF24' },
-          { label: 'Poor (<50%)', color: '#F87171' },
-          { label: 'Skipped', color: '#E5E7EB' },
+          { label: `${t.goals.perfect} (100%)`, color: '#10B981' },
+          { label: `${t.goals.good } (75%+)`, color: '#34D399' },
+          { label: `${t.goals.fair} (50%+)`, color: '#FBBF24' },
+          { label: `${t.goals.poor} (<50%)`, color: '#F87171' },
+          { label: `${t.goals.skipped}`, color: '#E5E7EB' },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />

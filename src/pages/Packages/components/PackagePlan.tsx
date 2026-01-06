@@ -48,7 +48,7 @@ const PackagePlan = ({
           className={cn(
             'rounded-full px-6 py-2 h-10 transition-all',
             billingPeriod === 'monthly'
-              ? 'bg-white shadow-sm text-black'
+              ? 'bg-white shadow-sm text-black hover:bg-white'
               : 'text-gray-500 hover:text-black',
           )}
         >
@@ -60,7 +60,7 @@ const PackagePlan = ({
           className={cn(
             'rounded-full px-6 py-2 h-10 transition-all',
             billingPeriod === 'yearly'
-              ? 'bg-white shadow-sm text-black'
+              ? 'bg-white shadow-sm text-black hover:bg-white'
               : 'text-gray-500 hover:text-black',
           )}
         >

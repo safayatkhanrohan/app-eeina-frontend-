@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Target } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProgressProps {
   progressPentage: number;
@@ -13,6 +14,7 @@ interface ProgressProps {
 
 const Progress: React.FC<ProgressProps> = ({ progressPentage, startDate, endDate, className }) => {
   // Safe date formatting
+  const {t} = useLanguage()
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), 'MMM d, yyyy');
@@ -28,7 +30,7 @@ const Progress: React.FC<ProgressProps> = ({ progressPentage, startDate, endDate
             <div className="bg-blue-50 p-1.5 rounded-full">
                 <Target className="w-4 h-4 text-blue-500" />
             </div>
-            <h3 className="text-sm font-semibold text-gray-700">Goal Progress</h3>
+            <h3 className="text-sm font-semibold text-gray-700">{t.goals.GoalProgress}</h3>
         </div>
         <span className="text-2xl font-bold text-gray-900">{progressPentage}%</span>
       </div>
@@ -44,10 +46,10 @@ const Progress: React.FC<ProgressProps> = ({ progressPentage, startDate, endDate
       <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3 border-gray-100">
         <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-gray-400" />
-            <span>Start: {formatDate(startDate)}</span>
+            <span>{t.goals.Start}: {formatDate(startDate)}</span>
         </div>
         <div className="flex items-center gap-1.5">
-            <span>End: {formatDate(endDate)}</span>
+            <span>{t.goals.End}: {formatDate(endDate)}</span>
         </div>
       </div>
     </Card>
