@@ -26,7 +26,14 @@ const PlanCard = ({
       {packages.map((pkg) => {
         const isBestDeal = pkg.bestDeal;
         const price =
-          billingPeriod === "monthly" ? pkg.baseMonthlyPrice : pkg.baseAnnualPrice;
+          billingPeriod === "monthly"
+            ? pkg.baseMonthlyPrice
+            : pkg.baseAnnualPrice;
+        // Calculate special price (discounted) based on selected billing period
+        const specialPrice =
+          billingPeriod === "monthly"
+            ? pkg.specialMonthlyPrice
+            : pkg.specialAnnualPrice;
         const currency = "SAR"; // Hardcoded or from API if available (API didn't show currency)
 
         const isFreePkg = pkg.slug === "free";
@@ -73,13 +80,44 @@ const PlanCard = ({
                 )}
             </div>
 
-            <h2 className="font-bold">
-              <span className="text-[19px]">{currency} </span>
-              <span className="text-[33px]">{price} / </span>
-              <span className="text-[18px] font-normal text-[#878787]">
-                {billingPeriod === "monthly" ? t.Package.month : t.Package.annual}
-              </span>
-            </h2>
+            {/* Price Display Section: Handles both standard and discounted pricing */}
+            <div className="flex flex-col">
+              {/* Check if a special price exists and is lower than the regular price */}
+              {specialPrice && specialPrice < price ? (
+                /* Discounted Price Layout */
+                <div className="flex flex-col">
+                  {/* Original Price shown with strikethrough */}
+                  <span className="text-gray-400 line-through text-lg font-medium ml-1">
+                    {currency} {price}
+                  </span>
+                  {/* Discounted Price Highlighted */}
+                  <h2 className="font-bold">
+                    <span className="text-[19px] text-[#2ECC71]">
+                      {currency}{" "}
+                    </span>
+                    <span className="text-[33px] text-[#2ECC71]">
+                      {specialPrice} /{" "}
+                    </span>
+                    <span className="text-[18px] font-normal text-[#878787]">
+                      {billingPeriod === "monthly"
+                        ? t.Package.month
+                        : t.Package.annual}
+                    </span>
+                  </h2>
+                </div>
+              ) : (
+                /* Standard Price Layout */
+                <h2 className="font-bold">
+                  <span className="text-[19px]">{currency} </span>
+                  <span className="text-[33px]">{price} / </span>
+                  <span className="text-[18px] font-normal text-[#878787]">
+                    {billingPeriod === "monthly"
+                      ? t.Package.month
+                      : t.Package.annual}
+                  </span>
+                </h2>
+              )}
+            </div>
 
             <p className="text-base font-normal text-[#606060] border-b pb-5 border-b-[#F5F5F5] empty:hidden">
               {/* Description missing in API, maybe use first feature or empty? */}
@@ -150,12 +188,11 @@ const PlanCard = ({
         <Button
           className="py-6 border border-[#EFEFEF] bg-[#F5F5F5] rounded-xl text-[#383838] text-[14px] lg:text-base font-medium hover:bg-[#F5F5F5]"
           disabled
-        >
-        </Button>
+        ></Button>
 
         <div className="absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center rounded-[22px]">
           <span className="text-xl lg:text-2xl font-bold text-[#383838]">
-           {language=="ar"?"قريباً":"Coming Soon"}
+            {language == "ar" ? "قريباً" : "Coming Soon"}
           </span>
         </div>
       </Card>

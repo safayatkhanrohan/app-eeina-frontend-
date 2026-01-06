@@ -149,6 +149,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
   const phoneNumber =
     phoneNormalized.replace(/^\+?\d{1,4}/, "").replace(/\D/g, "") || "";
 
+
   // Determine currency for Tap SDK
   const tapCurrency =
     (Currencies as any)[currency.toUpperCase()] ?? Currencies.SAR;
@@ -178,12 +179,6 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
   const tapCustomer = useMemo(() => {
     const contact: any = {};
     if (email) contact.email = email;
-    if (phoneNumber) {
-      contact.phone = {
-        countryCode: phoneCountryCode,
-        number: phoneNumber,
-      };
-    }
 
     return {
       name: [
@@ -197,7 +192,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
       editable: true,
       contact: Object.keys(contact).length > 0 ? contact : undefined,
     };
-  }, [customerFirst, customerLast, email, phoneCountryCode, phoneNumber]);
+  }, [customerFirst, customerLast, email]);
 
   console.log("Tap Config:", { tapTransaction, tapCustomer });
 
