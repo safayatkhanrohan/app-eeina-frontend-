@@ -18,9 +18,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/hooks/hook';
+import { useLanguage } from '@/contexts/LanguageContext';
 const TAP_PUBLIC_KEY = import.meta.env.VITE_TAP_PUBLIC_KEY;
 
 const PaymentPage = () => {
+  const {t} = useLanguage()
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { data: orderResponse, isLoading, error } = useGetOrderByIdQuery(orderId);
@@ -149,9 +151,9 @@ const PaymentPage = () => {
   if (error || !order) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 gap-4">
-        <p className="text-red-500 text-lg">Failed to load order details for payment.</p>
+        <p className="text-red-500 text-lg">{t.payment.FailedToLoadOrder}</p>
         <Button variant="outline" onClick={() => navigate('/packages')}>
-          Go Back
+          {t.payment.GoBack}
         </Button>
       </div>
     );
@@ -165,18 +167,18 @@ const PaymentPage = () => {
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-8 w-8">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <CardTitle className="text-2xl">Secure Payment</CardTitle>
+            <CardTitle className="text-2xl">{t.payment.SecurePaymentTitle}</CardTitle>
           </div>
-          <CardDescription>Complete your purchase safely.</CardDescription>
+          <CardDescription>{t.payment.SecurePaymentDescription}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="bg-blue-50 p-4 rounded-md flex items-center gap-3 text-blue-700 mb-4 border border-blue-100">
             <ShieldCheck className="w-5 h-5" />
-            <span className="text-sm font-medium">Your payment is encrypted and secure.</span>
+            <span className="text-sm font-medium">{t.payment.PaymentEncrypted}</span>
           </div>
 
           <div className="flex justify-between items-center text-sm font-medium text-gray-700 border-b pb-4">
-            <span>Total to Pay</span>
+            <span>{t.payment.TotalToPay}</span>
             <span className="text-xl text-gray-900">
               ${order.pricingSnapshot?.total?.toFixed(2)}
             </span>
@@ -240,7 +242,7 @@ const PaymentPage = () => {
                 onError={(data: any) => {
                   setIsTokenizing(false);
                   console.error('Tap card SDK error', data);
-                  toast.error('Card form error. Please check card details.');
+                  toast.error(t.payment.detailsCardFormError);
                 }}
                 onSuccess={(data: any) => {
                   setIsTokenizing(false);
@@ -265,7 +267,7 @@ const PaymentPage = () => {
             {(isCreatingCharge || !!tokenId) && (
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Starting secure payment…</span>
+                <span>{t.payment.StartingSecurePayment}</span>
               </div>
             )}
           </div>

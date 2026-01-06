@@ -30,4 +30,5 @@ export const common: CommonTranslations = {
   generating: 'Generating...',
   error_occurred: 'An error occurred',
   no_results: 'No results found',
+  adding: "Adding...",
 };

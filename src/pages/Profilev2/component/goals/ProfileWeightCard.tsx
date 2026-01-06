@@ -8,6 +8,7 @@ import { useUpdateWeightProgressMutation } from '@/redux/Features/Goals/GoalsApi
 import { formatDate } from '@/lib/formatDate';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProfileWeightCardProps {
     currentWeight: number;
@@ -29,16 +30,16 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
     // Local state for the inline input
     const [newWeight, setNewWeight] = useState<string>(currentWeight ? currentWeight.toString() : '');
     const [updateWeightProgress] = useUpdateWeightProgressMutation();
-
+    const {t} = useLanguage()
     const handleSave = async () => {
         const weightVal = parseFloat(newWeight);
         if (!weightVal || weightVal <= 0) return;
 
         try {
             await updateWeightProgress({ goalId: goalId || '1', weight: weightVal }).unwrap();
-            toast.success('Weight updated successfully');
+            toast.success(t.goals.success);
         } catch (error) {
-            toast.error('Failed to update weight');
+            toast.error(t.goals.error);
         }
     };
 
@@ -73,8 +74,8 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
                             <Weight className="w-5 h-5 text-[#6AB240]" />
                         </div>
                         <div>
-                            <h2 className="text-[18px] font-bold text-[#1E1E1E]">Weight Journey</h2>
-                            <p className="text-xs text-gray-500 font-medium">Keep going, you're doing great!</p>
+                            <h2 className="text-[18px] font-bold text-[#1E1E1E]">{t.goals.WeightJourneytitle}</h2>
+                            <p className="text-xs text-gray-500 font-medium">{t.goals.WeightJourneysubtitle}</p>
                         </div>
                     </div>
                     <div className="text-right">
@@ -85,8 +86,8 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
                 {/* Progress Bar Visual */}
                 <div className="space-y-2">
                     <div className="flex justify-between text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
-                        <span>Start {startingWeight}kg</span>
-                        <span>Goal {targetWeight}kg</span>
+                        <span>{t.goals.Start} {startingWeight}{t.goals.kg}</span>
+                        <span>{t.goals.goal} {targetWeight}kg</span>
                     </div>
                     <div className="h-2.5 w-full bg-[#F2F4F7] rounded-full overflow-hidden">
                         <div
@@ -130,7 +131,7 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
                         onClick={handleSave}
                         className="bg-[#1E1E1E] hover:bg-black text-white rounded-xl px-5 h-9 font-semibold text-xs shadow-sm"
                     >
-                        Update
+                        {t.goals.update}
                     </Button>
                 </div>
             </div>
@@ -142,7 +143,7 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
                         <TrendingDown className="w-4 h-4 text-emerald-500" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Lost</span>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{t.goals.lost}</span>
                         <span className="text-sm font-bold text-[#1E1E1E]">{lostSoFar.toFixed(1)} <span className="text-[10px] font-medium text-gray-400">kg</span></span>
                     </div>
                 </div>
@@ -151,7 +152,7 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
                         <Target className="w-4 h-4 text-blue-500" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Left</span>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{t.goals.left}</span>
                         <span className="text-sm font-bold text-[#1E1E1E]">{remaining.toFixed(1)} <span className="text-[10px] font-medium text-gray-400">kg</span></span>
                     </div>
                 </div>
@@ -160,7 +161,7 @@ const ProfileWeightCard: React.FC<ProfileWeightCardProps> = ({
             {/* Chart */}
             <div className="w-full flex-1 min-h-[140px] mt-2 relative">
                 <div className="absolute top-0 left-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded-full z-10 border border-gray-100">
-                    Last 30 Days
+                   {t.goals.last30Days}
                 </div>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>

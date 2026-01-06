@@ -572,4 +572,53 @@ export interface GoalsTranslations {
   adjust_portion_sizes: string;
   stay_hydrated_daily: string;
   listen_to_your_body: string;
+   onFire: string;
+  best: string;
+  keepItUp: string;
+  GoalProgress: string;
+  Start: string;
+  End: string;
+  Activitytitle:string,
+  Activitysubtitle: string,
+  dailyGoal: string,
+
+  breakfast: string,
+  lunch:string,
+  dinner: string,
+  snack: string,
+  WeightJourneytitle: string,
+  WeightJourneysubtitle: string,
+  goal:string,
+  update: string,
+  lost: string,
+  left: string,
+  last30Days:string,
+  kg:string,
+  success:string,
+  error: string,
+  mealPlannerTitle: string,
+  mealPlannerDesc: string,
+  Commitmenttitle: string
+  Commitmentsubtitle: string
+  weeklyAvg: string;
+  perfect: string
+  good: string
+  fair: string
+  poor:string
+  skipped:string
+  WeightHistory:string
+  WeightJourney:string
+  WeightJourneydusc:string
+  logWeight: string;
+  addWeightLog: string;
+  enterWeight: string;
+  starting: string;
+  totalChange: string;
+  current: string;
+  progressChart: string;
+  recentLogs: string;
+  sinceStart: string;
+  latestLog: string;
+  swipeHistory: string;
+
 }

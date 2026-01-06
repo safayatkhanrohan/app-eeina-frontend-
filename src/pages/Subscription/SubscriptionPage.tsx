@@ -18,12 +18,14 @@ import {
   useSetDefaultPaymentMethodMutation,
 } from '@/redux/Features/PaymentMethods/PaymentMethodsApi';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Mock invoices for now (can be replaced with real API later)
 const MOCK_INVOICES: Invoice[] = [];
 
 export const SubscriptionPage: React.FC = () => {
   const navigate = useNavigate();
+  const {t} =useLanguage()
   const user = useAppSelector((state) => state.auth.user);
 
   // Modal state for adding payment method
@@ -167,13 +169,13 @@ export const SubscriptionPage: React.FC = () => {
       <div className="min-h-screen bg-gray-50/50">
         <div className="container mx-auto py-12 px-4 max-w-6xl">
           <div className="text-center py-16">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">No Active Subscription</h1>
-            <p className="text-gray-500 mb-8">You don't have an active subscription yet.</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{t.subscription.noSubscriptionTitle}</h1>
+            <p className="text-gray-500 mb-8">{t.subscription.noSubscriptionDesc}</p>
             <button
               onClick={() => navigate('/packages')}
               className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90"
             >
-              View Plans
+             {t.subscription.viewPlansBtn}
             </button>
           </div>
         </div>
@@ -186,12 +188,12 @@ export const SubscriptionPage: React.FC = () => {
       <div className="container mx-auto py-12 px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Subscription & Billing</h1>
-            <p className="text-gray-500 mt-1">Manage your plan, payment methods, and invoices.</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t.subscription.subscriptionTitle}</h1>
+            <p className="text-gray-500 mt-1">{t.subscription.subscriptionDesc}</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-sm font-medium text-green-700">System Operational</span>
+            <span className="text-sm font-medium text-green-700">{t.subscription.systemOperational}</span>
           </div>
         </div>
 

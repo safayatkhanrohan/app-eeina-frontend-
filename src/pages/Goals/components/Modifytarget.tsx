@@ -5,13 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { GoalTypes } from '../types/type';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 
 const Modifytarget = ({ className, goal }: { className?: string; goal: any }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-
-  console.log('current goal', goal.type);
 
   const goals: {
     icon: JSX.Element;

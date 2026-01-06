@@ -3,12 +3,13 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useGetOrderByIdQuery } from '@/redux/Features/Package/PackageApi';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const PaymentCallback = () => {
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
+const {t} = useLanguage()
   const { data: orderResponse, isFetching } = useGetOrderByIdQuery(orderId, {
     skip: !orderId,
     pollingbillingPeriod: 2500,
@@ -52,7 +53,7 @@ const PaymentCallback = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <div className="text-center">
         <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-4" />
-        <p className="text-gray-500">Processing payment status...</p>
+        <p className="text-gray-500">{t.payment.ProcessingPayment}</p>
       </div>
     </div>
   );

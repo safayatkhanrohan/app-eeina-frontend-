@@ -40,9 +40,9 @@ export const getProfileSections = (language: 'ar' | 'en', t: any): SectionProps[
     title: language === 'ar' ? 'أهدافي' : 'My Goals',
     icon: <Goals />,
     links: [
-      { label: 'View Goals', to: '/Profile/goals' },
-      { label: 'Meal History', to: '/Profile/goals/meal-history' },
-      { label: 'Health Settings', to: '/Profile/goals/health-settings' },
+      { label: language === 'ar' ? 'عرض الأهداف' : 'View Goals', to: '/Profile/goals' },
+      { label: language === 'ar' ? 'سجل الوجبات' : 'Meal History', to: '/Profile/goals/meal-history' },
+      { label: language === 'ar' ? 'إعدادات الصحة' : 'Health Settings', to: '/Profile/goals/health-settings' },
     ],
   },
   {
@@ -71,7 +71,7 @@ export const getProfileSections = (language: 'ar' | 'en', t: any): SectionProps[
     title: `${t.profile.account_settings}`,
     icon: <AccSetting />,
     links: [
-      { label: 'Settings', to: '/account-settings' },
+      { label: language === 'ar' ? 'الإعدادات' : 'Settings', to: '/account-settings' },
       { label: language === 'ar' ? 'الاشتراك' : 'Subscription', to: '/subscription' },
     ],
   },

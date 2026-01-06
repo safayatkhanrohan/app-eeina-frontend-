@@ -10,6 +10,7 @@ import MastercardIcon from '@/assets/Icons/mastercard.svg?react';
 import MadaIcon from '@/assets/Icons/mada.svg?react';
 import AmexIcon from '@/assets/Icons/amex.svg?react';
 import DefaultCardIcon from '@/assets/Icons/creditCard.svg?react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PaymentMethodsProps {
   paymentMethods: PaymentMethod[];
@@ -68,12 +69,13 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
   onRemoveMethod,
   onSetDefault,
 }) => {
+  const {t} =useLanguage()
   return (
     <Card className="shadow-sm border border-gray-100 h-full">
       <CardHeader className="pb-3 border-b border-gray-100 flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-lg font-medium flex items-center gap-2">
           <CreditCard className="w-5 h-5 text-gray-400" />
-          Payment Methods
+         {t.subscription.PaymentMethods}
         </CardTitle>
         <Button
           onClick={onAddMethod}
@@ -81,7 +83,7 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
           variant="ghost"
           className="text-primaryColor hover:text-primaryColor/80 hover:bg-primaryColor/5 h-8"
         >
-          <Plus className="h-4 w-4 mr-1" /> Add New
+          <Plus className="h-4 w-4 mr-1" /> {t.subscription.addNew}
         </Button>
       </CardHeader>
       <CardContent className="pt-6 space-y-4">
@@ -106,12 +108,12 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                   </p>
                   {method.isDefault && (
                     <span className="px-2 py-0.5 text-[10px] font-bold text-primaryColor bg-white border border-primaryColor/20 rounded-full uppercase tracking-wide">
-                      Default
+                      {t.subscription.default}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Expires {String(method.expiryMonth).padStart(2, '0')}/{method.expiryYear}
+                  {t.subscription.expires} {String(method.expiryMonth).padStart(2, '0')}/{method.expiryYear}
                 </p>
               </div>
             </div>
@@ -124,7 +126,7 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                   onClick={() => onSetDefault(method.id)}
                   className="text-xs text-gray-500 hover:text-primaryColor hover:bg-transparent"
                 >
-                  Set Default
+                 {t.subscription.setDefault}
                 </Button>
               )}
               {/* Prevent deleting if it's the only one or default (unless logic allows) */}
@@ -142,14 +144,14 @@ export const PaymentMethods: React.FC<PaymentMethodsProps> = ({
         {paymentMethods.length === 0 && (
           <div className="text-center py-8 px-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50">
             <CreditCard className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm font-medium text-gray-500">No payment methods</p>
-            <p className="text-xs text-gray-400 mt-1">Add a card to process payments</p>
+            <p className="text-sm font-medium text-gray-500">{t.subscription.noMethods}</p>
+            <p className="text-xs text-gray-400 mt-1">{t.subscription.addCardHint}</p>
           </div>
         )}
 
         <div className="pt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
           <Lock className="w-3 h-3" />
-          <span>Payments secured with 256-bit encryption</span>
+          <span>{t.subscription.securedText}</span>
         </div>
       </CardContent>
     </Card>

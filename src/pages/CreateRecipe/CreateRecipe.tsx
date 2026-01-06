@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { RecipeForm } from '../../components/RecipeForm/RecipeForm';
 import { getLocalizedPath } from '@/lib/getLocalizedPath';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { RecipeFormSkeleton } from '@/components/ui/skeletons/RecipeFormSkeleton';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -149,7 +149,7 @@ export const CreateRecipe = (): JSX.Element => {
                 type="button"
                 onClick={handleImportRecipeWithAI}
                 disabled={isImporting}
-                className="bg-green-600 hover:bg-green-700 text-white px-2 sm:px-6 py-2.5 rounded-lg
+                className="bg-primaryColor hover:bg-[#539d29] text-white px-2 sm:px-6 py-2.5 rounded-lg
                   font-medium transition-colors duration-200 flex items-center gap-1 sm:gap-2 shadow-md hover:shadow-lg
                   text-[12px] sm:text-base
                   "

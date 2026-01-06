@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { formatDate } from '@/lib/formatDate';
 import { cn } from '@/lib/utils';
 import { useUpdateWeightProgressMutation } from '@/redux/Features/Goals/GoalsApi';
@@ -27,7 +28,7 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
   const [open, setOpen] = React.useState(false);
   const [weight, setWeight] = React.useState<string>('');
   const [updateWeightProgress] = useUpdateWeightProgressMutation();
-
+const {t} = useLanguage()
   const handleAddLog = () => {
     const weightVal = parseFloat(weight);
     if (!weightVal || weightVal <= 0) return;
@@ -97,34 +98,34 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-[22px] font-bold text-[#1E1E1E]">Weight Journey</h2>
-          <p className="text-[#878787] text-sm">Track your timeline</p>
+          <h2 className="text-[22px] font-bold text-[#1E1E1E]">{t.goals.WeightJourney}</h2>
+          <p className="text-[#878787] text-sm">{t.goals.WeightJourneydusc}</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="bg-[#101828] text-white hover:bg-black rounded-xl px-4 py-2 flex items-center gap-2">
               <Plus size={18} />
-              Log Weight
+             {t.goals.logWeight}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add Weight Log</DialogTitle>
+              <DialogTitle>{t.goals.addWeightLog}</DialogTitle>
             </DialogHeader>
             <div className="py-4">
               <Input
                 type="number"
-                placeholder="Enter weight in kg"
+                placeholder={t.goals.enterWeight}
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
               />
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
-                Cancel
+                {t.common.cancel}
               </Button>
               <Button onClick={handleAddLog} className="bg-[#6AB240] hover:bg-[#5da035]">
-                Save
+                {t.common.save}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -134,10 +135,10 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-[#F8F9FB] rounded-2xl p-4 flex flex-col justify-center items-start">
-          <span className="text-[#98A2B3] text-xs font-bold uppercase mb-1">Starting</span>
+          <span className="text-[#98A2B3] text-xs font-bold uppercase mb-1">{t.goals.starting}</span>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-bold text-[#101828]">{startWeight}</span>
-            <span className="text-[#98A2B3] text-sm font-medium">kg</span>
+            <span className="text-[#98A2B3] text-sm font-medium">{t.goals.kg}</span>
           </div>
           <span className="text-[#98A2B3] text-xs mt-1">
             {processedLogs.length > 0 ? formatDate(processedLogs[0].date, { short: true }) : '-'}
@@ -146,9 +147,9 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
 
         <div className="bg-[#F8F9FB] rounded-2xl p-4 flex flex-col justify-center items-start relative overflow-hidden">
           <div className="absolute right-0 top-0 p-2 opacity-10">
-            {isWeightLoss ? <TrendingDown size={40} /> : <TrendingUp size={40} />}
+            {/* {isWeightLoss ? <TrendingDown size={40} /> : <TrendingUp size={40} />} */}
           </div>
-          <span className="text-[#98A2B3] text-xs font-bold uppercase mb-1">Total Change</span>
+          <span className="text-[#98A2B3] text-xs font-bold uppercase mb-1">{t.goals.totalChange}</span>
           <div className="flex items-baseline gap-1">
             <span
               className={cn(
@@ -159,27 +160,27 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
               {totalChange > 0 ? '+' : ''}
               {totalChange.toFixed(1)}
             </span>
-            <span className="text-[#98A2B3] text-sm font-medium">kg</span>
+            <span className="text-[#98A2B3] text-sm font-medium">{t.goals.kg}</span>
           </div>
-          <span className="text-[#98A2B3] text-xs mt-1">Since start</span>
+          <span className="text-[#98A2B3] text-xs mt-1">{t.goals.sinceStart}</span>
         </div>
 
         <div className="bg-[#F8F9FB] rounded-2xl p-4 flex flex-col justify-center items-start">
-          <span className="text-[#039855] text-xs font-bold uppercase mb-1">Current</span>
+          <span className="text-[#039855] text-xs font-bold uppercase mb-1">{t.goals.current}</span>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-bold text-[#101828]">{currentWeight}</span>
-            <span className="text-[#98A2B3] text-sm font-medium">kg</span>
+            <span className="text-[#98A2B3] text-sm font-medium">{t.goals.kg}</span>
           </div>
-          <span className="text-[#98A2B3] text-xs mt-1">Latest Log</span>
+          <span className="text-[#98A2B3] text-xs mt-1">{t.goals.latestLog}</span>
         </div>
       </div>
 
       {/* Chart */}
       <div className="w-full h-[200px] mt-4">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-[#98A2B3] text-xs font-bold uppercase">Progress Chart</span>
+          <span className="text-[#98A2B3] text-xs font-bold uppercase">{t.goals.progressChart}</span>
           <span className="px-3 py-1 bg-[#F2F4F7] rounded-full text-xs text-[#667085] font-medium">
-            Swipe for history
+          {t.goals.swipeHistory}
           </span>
         </div>
         <ResponsiveContainer width="100%" height="100%">
@@ -220,7 +221,7 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
 
       {/* Recent Logs List */}
       <div className="mt-4">
-        <h3 className="text-[#98A2B3] text-xs font-bold uppercase mb-4">Recent Logs Series</h3>
+        <h3 className="text-[#98A2B3] text-xs font-bold uppercase mb-4">{t.goals.recentLogs}</h3>
         <div className="flex flex-col gap-3">
           {recentLogs.slice(0, 5).map((log, index) => {
             const prevLog = recentLogs[index + 1];
@@ -244,7 +245,7 @@ const WeightLog = ({ className, logs, height, startWeight, goalId }: WeightLogPr
                   </div>
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-xl font-bold text-[#1E1E1E]">{log.weight} kg</span>
+                      <span className="text-xl font-bold text-[#1E1E1E]">{log.weight} {t.goals.kg}</span>
                       {index !== recentLogs.length - 1 && (
                         <span
                           className={cn(

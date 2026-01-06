@@ -33,7 +33,7 @@ const PackagePlan = ({
           {t.Package.upgradeanytime}
         </span>
       </div>
-      <h1 className="text-center text-[#242424] text-[20px] xl:text-[36px] xl2:text-[44px]! font-semibold">
+      <h1 className="text-center text-[#242424] text-[20px] xl:text-[36px] xl2:text-[44px]! !font-semibold">
         {t.Package.upgradeanytimetitle}
       </h1>
       <p className="text-center text-[#878787] text-[16px] xl:text-[20px] xl2:text-[24px]! font-normal">
@@ -48,7 +48,7 @@ const PackagePlan = ({
           className={cn(
             'rounded-full px-6 py-2 h-10 transition-all',
             billingPeriod === 'monthly'
-              ? 'bg-white shadow-sm text-black'
+              ? 'bg-white shadow-sm text-black hover:bg-white'
               : 'text-gray-500 hover:text-black',
           )}
         >
@@ -60,7 +60,7 @@ const PackagePlan = ({
           className={cn(
             'rounded-full px-6 py-2 h-10 transition-all',
             billingPeriod === 'yearly'
-              ? 'bg-white shadow-sm text-black'
+              ? 'bg-white shadow-sm text-black hover:bg-white'
               : 'text-gray-500 hover:text-black',
           )}
         >

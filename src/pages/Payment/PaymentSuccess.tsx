@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const PaymentSuccess = () => {
+  const {t} = useLanguage()
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { data: orderResponse, isLoading } = useGetOrderByIdQuery(orderId);
@@ -58,8 +60,8 @@ const PaymentSuccess = () => {
   if (!order) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 gap-4">
-        <p className="text-red-500 text-lg">Order not found.</p>
-        <Button onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+        <p className="text-red-500 text-lg">{t.payment.OrderNotFound}</p>
+        <Button onClick={() => navigate('/dashboard')}>{t.payment.GoToDashboard}</Button>
       </div>
     );
   }
@@ -71,36 +73,36 @@ const PaymentSuccess = () => {
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
             <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
-          <CardTitle className="text-2xl text-green-700">Payment Successful!</CardTitle>
+          <CardTitle className="text-2xl text-green-700">{t.payment.PaymentSuccessfulTitle}</CardTitle>
           <p className="text-gray-500 mt-2">
-            Thank you for your purchase. Your subscription is now active.
-          </p>
+         {t.payment.PaymentSuccessfulDescription}
+         </p>
         </CardHeader>
         <CardContent className="space-y-6 text-center">
           <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
             <h3 className="font-semibold text-lg text-gray-900 mb-1">
-              {packageDetails?.name?.en || 'Premium Subscription'}
+              {packageDetails?.name?.en || `${t.payment.PackageNameFallback}`}
             </h3>
-            <p className="text-sm text-gray-500 capitalize mb-4">{order.billingPeriod} Plan</p>
+            <p className="text-sm text-gray-500 capitalize mb-4">{order.billingPeriod} {t.payment.Plan}</p>
 
             <div className="flex justify-between text-sm text-gray-600 border-t pt-4">
-              <span>Amount Paid</span>
+              <span>{t.payment.AmountPaid}</span>
               <span className="font-bold text-gray-900">
                 ${order.pricingSnapshot?.total?.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between text-sm text-gray-600 mt-2">
-              <span>Order ID</span>
+              <span>{t.payment.OrderID}</span>
               <span className="font-mono">{order._id?.slice(-8).toUpperCase()}</span>
             </div>
           </div>
           <p className="text-sm text-gray-500">
-            A confirmation email has been sent to your registered email address.
+           {t.payment.ConfirmationEmailSent}
           </p>
         </CardContent>
         <CardFooter className="flex-col gap-3">
           <Button size="lg" className="w-full font-semibold" onClick={() => navigate('/')}>
-            Go to Dashboard <ArrowRight className="ml-2 w-4 h-4" />
+          {t.payment.GoToDashboard}<ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </CardFooter>
       </Card>
