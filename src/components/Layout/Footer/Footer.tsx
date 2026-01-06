@@ -58,7 +58,7 @@ export const Footer = () => {
         <div className="relative z-10 pt-10 xl:pt-48  flex flex-col-reverse lg:flex-col">
           <Link to={"/"} className="hidden w-[149px] h-[100px] lg:inline-block">
             <img
-              src="./eeinaaWhitlogo.png"
+              src="/eeinaaWhitlogo.png"
               className="w-full h-full object-cover"
               alt="logo"
             />
@@ -75,7 +75,7 @@ export const Footer = () => {
                     className="flex-1 max-w-[66px] h-[50px] sm:max-w-[80px] sm:h-[70px] lg:w-[149px] lg:h-[100px] block lg:hidden"
                   >
                     <img
-                      src="./eeinaaWhitlogo.png"
+                      src="/eeinaaWhitlogo.png"
                       className="w-full h-full object-cover"
                       alt="logo"
                     />

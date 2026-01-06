@@ -63,7 +63,7 @@ const PlanCard = ({
               {billingPeriod === "yearly" &&
                 pkg.baseAnnualPrice < pkg.baseMonthlyPrice * 12 && (
                   <Badge className="bg-[#D5F5E3] rounded-[6px] text-[#2ECC71] text-[13px] font-normal">
-                    Save{" "}
+                    {t.payment.save}{" "}
                     {(
                       100 -
                       (pkg.baseAnnualPrice / (pkg.baseMonthlyPrice * 12)) * 100
@@ -151,12 +151,11 @@ const PlanCard = ({
           className="py-6 border border-[#EFEFEF] bg-[#F5F5F5] rounded-xl text-[#383838] text-[14px] lg:text-base font-medium hover:bg-[#F5F5F5]"
           disabled
         >
-          Upgrade Plan
         </Button>
 
         <div className="absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center rounded-[22px]">
           <span className="text-xl lg:text-2xl font-bold text-[#383838]">
-            Coming Soon
+           {language=="ar"?"قريباً":"Coming Soon"}
           </span>
         </div>
       </Card>

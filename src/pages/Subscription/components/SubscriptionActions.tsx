@@ -11,6 +11,7 @@ import {
   CreditCard,
   Settings2,
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SubscriptionActionsProps {
   subscription: Subscription;
@@ -31,12 +32,13 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
   onReactivate,
   onRetryPayment,
 }) => {
+  const {t} =useLanguage()
   return (
     <Card className="shadow-sm border border-gray-100">
       <CardHeader className="pb-3 border-b border-gray-100">
         <CardTitle className="text-lg font-medium flex items-center gap-2">
           <Settings2 className="w-5 h-5 text-gray-400" />
-          Subscription Actions
+          {t.subscription.subscriptionActionsTitle}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
@@ -46,7 +48,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
               onClick={onRetryPayment}
               className="bg-yellow-500 hover:bg-yellow-600 text-white shadow-sm"
             >
-              <CreditCard className="mr-2 h-4 w-4" /> Retry Payment
+              <CreditCard className="mr-2 h-4 w-4" /> {t.subscription.retryPayment}
             </Button>
           )}
 
@@ -57,7 +59,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
                 onClick={onUpgrade}
                 className="bg-primaryColor hover:bg-primaryColor/90 text-white shadow-sm"
               >
-                <ArrowUpCircle className="mr-2 h-4 w-4" /> Upgrade Plan
+                <ArrowUpCircle className="mr-2 h-4 w-4" />{t.subscription.upgradePlan}
               </Button>
 
               {/* Downgrade Button - Secondary */}
@@ -66,7 +68,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
                 variant="outline"
                 className="border-gray-200 hover:bg-gray-50 text-gray-700"
               >
-                <ArrowDownCircle className="mr-2 h-4 w-4" /> Downgrade
+                <ArrowDownCircle className="mr-2 h-4 w-4" /> {t.subscription.downgrade}
               </Button>
 
               {/* Switch Cycle - Secondary */}
@@ -75,7 +77,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
                 variant="outline"
                 className="border-gray-200 hover:bg-gray-50 text-gray-700"
               >
-                <RefreshCw className="mr-2 h-4 w-4" /> Switch Billing Cycle
+                <RefreshCw className="mr-2 h-4 w-4" /> {t.subscription.switchBillingCycle}
               </Button>
 
               {/* Cancel - Destructive */}
@@ -85,7 +87,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
                   variant="ghost"
                   className="text-red-500 hover:text-red-600 hover:bg-red-50 ml-auto"
                 >
-                  <XCircle className="mr-2 h-4 w-4" /> Cancel Subscription
+                  <XCircle className="mr-2 h-4 w-4" /> {t.subscription.cancelSubscription}
                 </Button>
               )}
 
@@ -95,7 +97,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
                   onClick={onReactivate}
                   className="bg-green-600 hover:bg-green-700 text-white shadow-sm ml-auto"
                 >
-                  <Power className="mr-2 h-4 w-4" /> Reactivate Subscription
+                  <Power className="mr-2 h-4 w-4" /> {t.subscription.reactivateSubscription}
                 </Button>
               )}
             </>
@@ -107,7 +109,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
               onClick={onReactivate}
               className="bg-primaryColor hover:bg-primaryColor/90 text-white shadow-sm w-full sm:w-auto"
             >
-              <Power className="mr-2 h-4 w-4" /> Reactivate Subscription
+              <Power className="mr-2 h-4 w-4" /> {t.subscription.reactivateSubscription}
             </Button>
           )}
         </div>

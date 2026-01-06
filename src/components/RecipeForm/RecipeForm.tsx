@@ -171,7 +171,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           <Button
             type="submit"
             disabled={methods.formState.isSubmitting}
-            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-semibold rounded-xl h-14 shadow-md hover:shadow-lg transition-all"
+            className="w-full bg-gradient-to-r bg-primaryColor hover:bg-[#539d29] text-white py-4 text-lg font-semibold rounded-xl h-14 shadow-md hover:shadow-lg transition-all"
           >
             {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
             {isSubmitting

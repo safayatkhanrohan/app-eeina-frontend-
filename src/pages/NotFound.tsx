@@ -48,7 +48,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-[80vh] px-4 md:flex-row md:gap-12 ${isAr ? 'rtl' : 'ltr'}`} dir={isAr ? 'rtl' : 'ltr'}>
+    <div className={`py-16 flex flex-col items-center justify-center min-h-[80vh] px-4 md:flex-row md:gap-12 ${isAr ? 'rtl' : 'ltr'}`} dir={isAr ? 'rtl' : 'ltr'}>
       {/* 404 Image Section */}
       <div className="w-full max-w-sm md:max-w-md">
         <img
@@ -95,7 +95,7 @@ const NotFound = () => {
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 text-[#87B740] group-hover:bg-[#87B740] group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3zM12 8v8M8 12h8" /></svg>
               </div>
-              <div>
+              <div className='flex flex-col items-start'>
                 <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#87B740] transition-colors">{translations.explore[language]}</h3>
                 <p className="text-xs text-gray-500">{translations.findTasty[language]}</p>
               </div>
@@ -110,7 +110,7 @@ const NotFound = () => {
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 text-[#87B740] group-hover:bg-[#87B740] group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
               </div>
-              <div>
+              <div className='flex flex-col items-start'>
                 <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#87B740] transition-colors">{translations.readBlog[language]}</h3>
                 <p className="text-xs text-gray-500">{translations.healthTips[language]}</p>
               </div>

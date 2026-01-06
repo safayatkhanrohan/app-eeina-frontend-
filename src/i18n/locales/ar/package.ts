@@ -30,16 +30,22 @@ export const packageTrans: PackageTranslations = {
   QuestionsAboutPricing: "أسئلة حول التسعير",
   QuestionsAboutPricinginfo: "أسئلة شائعة حول خططنا وأسعارنا.",
 
-  faq_q1: "Can I change my plan later?",
-  faq_a1: "Yes, you can upgrade or downgrade your plan at any time.",
-  faq_q2: "What payment methods do you accept?",
-  faq_a2: "We accept all major credit cards and online payment methods.",
-  faq_q3: "Is there a free trial?",
-  faq_a3: "We offer a basic free plan so you can try out our features.",
-  faq_q4: "How do I cancel?",
-  faq_a4: "You can cancel anytime from your settings.",
-  faq_q5: "Is my data safe?",
-  faq_a5: "Yes, we use top-tier encryption and security practices.",
-  faq_q6: "Do you offer refunds?",
-  faq_a6: "Please contact support for refund inquiries.",
+faq_q1: "هل يمكنني تغيير خطتي لاحقًا؟",
+faq_a1: "نعم، يمكنك ترقية أو تخفيض خطتك في أي وقت.",
+
+faq_q2: "ما طرق الدفع المتاحة؟",
+faq_a2: "نقبل جميع بطاقات الائتمان الرئيسية ووسائل الدفع الإلكتروني.",
+
+faq_q3: "هل تتوفر فترة تجريبية مجانية؟",
+faq_a3: "نوفّر خطة مجانية أساسية تتيح لك تجربة ميزاتنا.",
+
+faq_q4: "كيف يمكنني إلغاء الاشتراك؟",
+faq_a4: "يمكنك إلغاء الاشتراك في أي وقت من خلال الإعدادات.",
+
+faq_q5: "هل بياناتي آمنة؟",
+faq_a5: "نعم، نستخدم أعلى معايير التشفير وممارسات الأمان لحماية بياناتك.",
+
+faq_q6: "هل تقدمون سياسة استرداد؟",
+faq_a6: "يرجى التواصل مع فريق الدعم للاستفسار عن عمليات الاسترداد.",
+
 };

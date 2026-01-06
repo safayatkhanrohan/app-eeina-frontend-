@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MealPlan } from '../types/type';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TodaysActivityProps {
   mealActivity: {
@@ -20,11 +21,12 @@ const TodaysActivity: React.FC<TodaysActivityProps> = ({
   onToggleMeal,
   mealPlan,
 }) => {
+  const {t} = useLanguage()
   const meals = [
-    { key: 'breakfast', label: 'Breakfast' },
-    { key: 'lunch', label: 'Lunch' },
-    { key: 'dinner', label: 'Dinner' },
-    { key: 'snack', label: 'Afternoon Snack' },
+    { key: 'breakfast', label: `${t.goals.breakfast}` },
+    { key: 'lunch', label: `${t.goals.lunch}` },
+    { key: 'dinner', label: `${t.goals.dinner}` },
+    { key: 'snack', label: `${t.goals.snack}` },
   ] as const;
 
   console.log('mealPlan', mealPlan);
@@ -42,11 +44,11 @@ const TodaysActivity: React.FC<TodaysActivityProps> = ({
     <Card className="p-6 w-full">
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Today's Activity</h2>
-          <p className="text-gray-500 text-sm">Check off meals as you eat.</p>
+          <h2 className="text-lg font-bold text-gray-900">{t.goals.Activitytitle}</h2>
+          <p className="text-gray-500 text-sm">{t.goals.Activitysubtitle}</p>
         </div>
         <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded uppercase">
-          Daily Goal
+          {t.goals.dailyGoal}
         </span>
       </div>
 
@@ -76,8 +78,8 @@ const TodaysActivity: React.FC<TodaysActivityProps> = ({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-gray-900">{percentage}%</span>
-            <span className="text-xs text-gray-500 font-medium">Completed</span>
+            <span className="text-xl xl2:text-3xl font-bold text-gray-900">{percentage}%</span>
+            <span className="text-xs text-gray-500 font-medium">{t.goals.complete}</span>
           </div>
         </div>
 
