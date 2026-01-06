@@ -1,4 +1,4 @@
-import { Check, Trash2 } from 'lucide-react';
+import { Check, Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
 
 /**
@@ -13,6 +13,8 @@ interface ShoppingItemProps {
   toggleItem: (id: string) => void;
   /** Function to remove an item from the shopping list */
   removeItem: (id: string) => void;
+  /** Function to swap an item */
+  onSwap?: (item: any) => void;
   /** Whether this is a custom user-added item */
   isCustom?: boolean;
   /** Whether this component is being rendered for PDF export */
@@ -29,6 +31,7 @@ export const ShoppingItem = ({
   language,
   toggleItem,
   removeItem,
+  onSwap,
   isCustom = false,
   isPdf = false,
 }: ShoppingItemProps) => {
@@ -89,7 +92,18 @@ export const ShoppingItem = ({
       </div>
 
       {/* Action buttons (Trash) - Only show on hover for desktop to clean up UI, always on mobile */}
-      <div className="flex items-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+        {!purchased && onSwap && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onSwap(item)}
+            className="text-gray-400 hover:text-blue-600 w-8 h-8 rounded-full hover:bg-blue-50"
+            title="Swap item"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"
