@@ -22,7 +22,8 @@ export const VerifyOtp = (): JSX.Element => {
   const [verifyOtp] = useVerifyOtpMutation();
   const [resendOtp] = useResendOtpMutation();
   const email = location.state?.email || sessionStorage.getItem("resetEmail");
-
+const mode = location.state?.mode || "verify";
+console.log("mode",mode)
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
@@ -71,10 +72,26 @@ export const VerifyOtp = (): JSX.Element => {
     }
 
     try {
+        if (mode === "reset") {
+      sessionStorage.setItem("resetOtp", enteredOtp);
+
+      navigate(getLocalizedPath(redirectTo, language), {
+        state: {
+          email,
+          otp: enteredOtp,
+        },
+      });
+
+      return; 
+    }
       await verifyOtp({ email, otp: enteredOtp }).unwrap();
       toast.success(t.auth.otp_success);
-      navigate(getLocalizedPath(redirectTo, language));
-      sessionStorage.setItem("resetOtp", enteredOtp);
+      navigate(getLocalizedPath(redirectTo, language),{
+        state: {
+          email,
+          otp: enteredOtp,
+        },
+      });
 
     } catch (error: any) {
       console.log(error);

@@ -48,7 +48,7 @@ export const Footer = () => {
 
   const year = new Date().getFullYear();
   return (
-    <footer className="relative w-full lg:mt-10 xl:mt-0 xl2:mt-20 bg-primaryColor xl:bg-transparent ">
+    <footer className="overflow-auto relative w-full lg:mt-10 xl:mt-0 xl2:mt-20 bg-primaryColor xl:bg-transparent ">
       <div className="container mx-auto max-w-6xl xl2:max-w-7xl px-3 ">
         <FooterWave />
 
