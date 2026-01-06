@@ -153,4 +153,6 @@ export const {
 
   useGetUserRecipeQuery,
   useImportRecipeWithAIMutation,
+  useLazyGetRecipeByIdQuery,
+  useLazyGetSinglePublicRecipeQuery,
 } = RecipeApi;

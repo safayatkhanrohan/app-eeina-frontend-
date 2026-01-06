@@ -11,6 +11,7 @@ import {
   Plus,
   ShoppingCartIcon,
   Search,
+  CalendarDays,
 } from 'lucide-react';
 import {
   useAddCustomItemMutation,
@@ -39,6 +40,7 @@ import IngredientSearchModal from './components/IngredientSearchModal';
 import { useAddItemtoSpecificListMutation } from '@/redux/Features/Shopping List/ShoppingListApi';
 
 import { CircularProgress } from '@/components/ui/CircularProgress';
+import ImportFromMealPlanModal from './components/ImportFromMealPlanModal';
 
 export const ListDetails = (): JSX.Element => {
   const { id: listId } = useParams();
@@ -55,6 +57,7 @@ export const ListDetails = (): JSX.Element => {
   const [isLoccationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isChoseStoreModalOpen, setIsChooseStoreModalOpen] = useState(false);
   const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
+  const [isImportMealPlanModalOpen, setIsImportMealPlanModalOpen] = useState(false);
   const [editProfile] = useEditProfileMutation();
   const [groupBy, setGroupBy] = useState<'aisle' | 'recipe'>('recipe');
   const [activeTab, setActiveTab] = useState<'pending' | 'purchased'>('pending');
@@ -504,6 +507,15 @@ export const ListDetails = (): JSX.Element => {
         <div className="mb-8 relative z-20 -mt-12 mx-4 sm:mx-8">
           <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-2 flex flex-col sm:flex-row gap-2">
             <Button
+              onClick={() => setIsImportMealPlanModalOpen(true)}
+              variant="ghost"
+              className="flex-initial justify-start h-12 text-gray-700 hover:text-primaryColor hover:bg-green-50 px-4 border-r-0 sm:border-r border-gray-100 rounded-none sm:rounded-l-lg"
+            >
+              <CalendarDays className="w-5 h-5 mr-3" />
+              <span className="text-base font-medium">{language === 'ar' ? 'استيراد وجبات' : 'Import Meals'}</span>
+            </Button>
+
+            <Button
               onClick={() => setIsIngredientModalOpen(true)}
               variant="ghost"
               className="flex-1 justify-start h-12 text-gray-500 hover:text-primaryColor hover:bg-green-50"
@@ -612,6 +624,7 @@ export const ListDetails = (): JSX.Element => {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     )}
+
                   </div>
                 </div>
 
@@ -741,10 +754,10 @@ export const ListDetails = (): JSX.Element => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Share Modal */}
-      <ShareListModal
+      < ShareListModal
         listId={listId!}
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
@@ -767,6 +780,11 @@ export const ListDetails = (): JSX.Element => {
         onClose={() => setIsIngredientModalOpen(false)}
         onAdd={handleAddIngredient}
         isLoading={isAddingIngredient}
+      />
+
+      <ImportFromMealPlanModal
+        isOpen={isImportMealPlanModalOpen}
+        onClose={() => setIsImportMealPlanModalOpen(false)}
       />
     </>
   );
