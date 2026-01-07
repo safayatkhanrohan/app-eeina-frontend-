@@ -61,6 +61,7 @@ export const ListDetails = (): JSX.Element => {
   const [editProfile] = useEditProfileMutation();
   const [groupBy, setGroupBy] = useState<'aisle' | 'recipe'>('recipe');
   const [activeTab, setActiveTab] = useState<'pending' | 'purchased'>('pending');
+  const [swapItem, setSwapItem] = useState<any>(null); // State to track item being swapped
 
   const { data, isLoading } = useGetSingleListQuery({
     id: listId!,
@@ -177,15 +178,31 @@ export const ListDetails = (): JSX.Element => {
 
   const handleAddIngredient = async (payload: any) => {
     try {
+      // If we are swapping, delete the old item first
+      if (swapItem) {
+        await deleteItem({ listId, itemId: swapItem._id, token: token || undefined }).unwrap();
+      }
+
       await addItemToSpecificList({
         listId,
         token: token || undefined,
         items: [payload],
       }).unwrap();
-      toast.success(t.shopping_list?.item_added_success || "Item added successfully");
+
+      toast.success(swapItem ? (t.shopping_list?.item_swapped_success || "Item swapped successfully") : (t.shopping_list?.item_added_success || "Item added successfully"));
+
+      // Close modal and reset swap item
+      setIsIngredientModalOpen(false);
+      setSwapItem(null);
+
     } catch (error: any) {
       toast.error(error?.data?.message || t.shopping_list?.add_item_failed || "Failed to add item");
     }
+  };
+
+  const handleInitiateSwap = (item: any) => {
+    setSwapItem(item);
+    setIsIngredientModalOpen(true);
   };
 
   const handleSuggestedAdd = (suggestion: string) => {
@@ -437,6 +454,7 @@ export const ListDetails = (): JSX.Element => {
         language={language}
         toggleItem={toggleItem}
         removeItem={removeItem}
+        onSwap={handleInitiateSwap}
         isCustom={!userListsItems.some((ri: any) => ri._id === item._id)}
         isPdf={isPdf}
       // displayName={getItemDisplayName(item)}
@@ -516,7 +534,10 @@ export const ListDetails = (): JSX.Element => {
             </Button>
 
             <Button
-              onClick={() => setIsIngredientModalOpen(true)}
+              onClick={() => {
+                setSwapItem(null);
+                setIsIngredientModalOpen(true);
+              }}
               variant="ghost"
               className="flex-1 justify-start h-12 text-gray-500 hover:text-primaryColor hover:bg-green-50"
             >
@@ -777,9 +798,16 @@ export const ListDetails = (): JSX.Element => {
 
       <IngredientSearchModal
         isOpen={isIngredientModalOpen}
-        onClose={() => setIsIngredientModalOpen(false)}
+        // If canceling swap, clear swap item
+        onClose={() => {
+          setIsIngredientModalOpen(false);
+          setSwapItem(null);
+        }}
         onAdd={handleAddIngredient}
         isLoading={isAddingIngredient}
+        title={swapItem ? (t.shopping_list?.swap_item || "Swap Item") : undefined}
+        confirmLabel={swapItem ? (t.shopping_list?.swap || "Swap") : undefined}
+        initialQuery={swapItem ? (swapItem.name?.[language] || swapItem.name?.en || swapItem.item?.name?.[language] || swapItem.item?.name?.en || '') : ''}
       />
 
       <ImportFromMealPlanModal

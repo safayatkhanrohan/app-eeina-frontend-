@@ -29,4 +29,5 @@ export const common: CommonTranslations = {
   done: 'تم',
   generating: 'جاري الإنشاء...',
   error_occurred: 'حدث خطأ',
+  adding:"جاري الإضافة..."
 };

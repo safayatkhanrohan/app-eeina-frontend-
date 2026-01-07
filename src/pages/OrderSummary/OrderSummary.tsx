@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const OrderSummary = () => {
+  const {t}=useLanguage()
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { data: orderResponse, isLoading, error } = useGetOrderByIdQuery(orderId);
@@ -35,9 +37,9 @@ const OrderSummary = () => {
     // Check if error status is 404 or something else
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 gap-4">
-        <p className="text-red-500 text-lg">Failed to load order details.</p>
+        <p className="text-red-500 text-lg">{t.payment.FailedToLoad}</p>
         <Button variant="outline" onClick={() => navigate('/packages')}>
-          Go Back to Packages
+          {t.payment.GoBack}
         </Button>
       </div>
     );
@@ -51,9 +53,9 @@ const OrderSummary = () => {
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-8 w-8">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <CardTitle className="text-2xl">Order Summary</CardTitle>
+            <CardTitle className="text-2xl">{t.payment.OrderSummary}</CardTitle>
           </div>
-          <p className="text-gray-500 text-sm pl-10">Review your order details before payment.</p>
+          <p className="text-gray-500 text-sm pl-10">{t.payment.ReviewDetails}</p>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Package Details */}
@@ -61,9 +63,9 @@ const OrderSummary = () => {
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold text-lg text-primary">
-                  {packageDetails?.name?.en || 'Premium Package'}
+                  {packageDetails?.name?.en || `${t.payment.PremiumPackage}`}
                 </h3>
-                <p className="text-sm text-gray-500 capitalize">{order.billingPeriod} Subscription</p>
+                <p className="text-sm text-gray-500 capitalize">{order.billingPeriod} {t.payment.Subscription}</p>
               </div>
               {/* You might want to display features here or keep it simple */}
             </div>
@@ -74,12 +76,12 @@ const OrderSummary = () => {
           {/* Order Details */}
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Subtotal</span>
+              <span className="text-gray-600">{t.payment.Subtotal}</span>
               <span className="font-medium">${order.pricingSnapshot?.basePrice?.toFixed(2)}</span>
             </div>
             {order.pricingSnapshot?.discountAmount > 0 && (
               <div className="flex justify-between text-sm text-green-600">
-                <span>Discount</span>
+                <span>{t.payment.Discount}</span>
                 <span>-${order.pricingSnapshot?.discountAmount?.toFixed(2)}</span>
               </div>
             )}
@@ -91,19 +93,19 @@ const OrderSummary = () => {
             <Separator className="my-2" />
 
             <div className="flex justify-between text-lg font-bold text-gray-900">
-              <span>Total</span>
+              <span>{t.payment.Total}</span>
               <span>${order.pricingSnapshot?.total?.toFixed(2)}</span>
             </div>
-            <p className="text-xs text-right text-gray-400">Currency: {order.currency}</p>
+            <p className="text-xs text-right text-gray-400">{t.payment.Currency} {order.currency}</p>
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-3">
           <Button size="lg" className="w-full font-semibold text-lg" onClick={handlePayNow}>
-            Pay Now ${order.pricingSnapshot?.total?.toFixed(2)}
+           {t.payment.PayNow} ${order.pricingSnapshot?.total?.toFixed(2)}
           </Button>
           <div className="flex justify-center items-center gap-2 text-xs text-gray-500 mt-2">
             <CheckCircle2 className="w-3 h-3 text-green-500" />
-            <span>Secure SSL Encrypted Payment</span>
+            <span>{t.payment.SecurePayment}</span>
           </div>
         </CardFooter>
       </Card>

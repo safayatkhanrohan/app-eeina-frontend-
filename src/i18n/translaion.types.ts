@@ -20,6 +20,8 @@ import {
   ShoppingListTranslations,
   TermsAndConditionTranslation,
   PackageTranslations,
+  SubscriptionTranslations,
+  PaymentTranslations,
 } from './types';
 
 export interface Translation {
@@ -44,4 +46,6 @@ export interface Translation {
   GoalsDashboard: GoalsDashboardTranslations;
   nutritionist: NutritionistTranslations;
   Package: PackageTranslations;
+  subscription:SubscriptionTranslations
+  payment:PaymentTranslations
 }

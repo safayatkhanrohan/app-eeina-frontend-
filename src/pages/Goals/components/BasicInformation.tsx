@@ -57,7 +57,7 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               />
               <label
                 htmlFor="floating_outlined"
-                className="absolute text-[14px] md:text-[16px] text-[#84818A] duration-300 transform -translate-y-1/2 top-1/2 z-10 origin-[0] bg-white px-2 peer-focus:top-2 peer-focus:scale-75 
+                className="absolute text-[14px] md:text-[16px] text-[#84818A] duration-300 transform -translate-y-1/2 top-1/2 z-10 origin-[0] bg-[#FBFCFC] px-2 peer-focus:top-2 peer-focus:scale-75 
                 peer-focus:-translate-y-4 peer-focus:text-[#84818A] 
                 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 
                  peer-valid:top-2 peer-valid:scale-75 peer-valid:-translate-y-4
@@ -80,7 +80,7 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               <label
                 htmlFor="floating_outlined_height"
                 className="absolute text-[14px] md:text-[16px] text-[#84818A] duration-300 transform
-                 -translate-y-1/2 top-1/2 z-10 origin-[0] bg-white px-2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4
+                 -translate-y-1/2 top-1/2 z-10 origin-[0] bg-[#FBFCFC] px-2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4
                   peer-focus:text-[#84818A] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
                    peer-valid:top-2 peer-valid:scale-75 peer-valid:-translate-y-4
                    peer-placeholder-shown:top-1/2 start-3"
@@ -102,7 +102,7 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               <label
                 htmlFor="floating_outlined_age"
                 className="absolute text-[14px] md:text-[16px] text-[#84818A] duration-300 transform -translate-y-1/2
-                 top-1/2 z-10 origin-[0] bg-white px-2 peer-focus:top-2 peer-focus:scale-75 
+                 top-1/2 z-10 origin-[0] bg-[#FBFCFC] px-2 peer-focus:top-2 peer-focus:scale-75 
                  peer-focus:-translate-y-4 peer-focus:text-[#84818A] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
                  peer-placeholder-shown:top-1/2  peer-valid:top-2 peer-valid:scale-75 peer-valid:-translate-y-4 start-3"
               >
@@ -111,7 +111,7 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>}
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-[#84818A] font-semibold text-[16px]">{t.goals.gender}</h3>
+              <h3 className="text-[#84818A] font-medium text-[16px]">{t.goals.gender}</h3>
               <div className="flex gap-3">
                 <Button
                   onClick={() => setValue('gender', 'male', { shouldValidate: true })}
@@ -137,7 +137,7 @@ const BasicInformation = ({ next, skip }: BasicInformationProps) => {
               )}
             </div>
             <div className="flex flex-col gap-5">
-              <h3 className="text-[#84818A] font-semibold text-[16px]">Activity level</h3>
+              <h3 className="text-[#84818A] font-medium text-[16px]">{t.goals.activity_level}</h3>
               <div className="flex gap-3 justify-start flex-wrap lg:flex-nowrap">
                 {options.map((option) => {
                   const isSelected = userInfo.activityLevel === option.value;

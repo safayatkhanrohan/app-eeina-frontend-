@@ -5,7 +5,7 @@ import { useResetPasswordMutation } from '@/redux/Features/Auth/authApi';
 import { ResetPasswordFormData, resetpasswordSchema } from '@/schemas/auth/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,9 +18,13 @@ const Resetpassword = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
-  const email = location.state?.email || sessionStorage.getItem('resetEmail');
 
-  const otp = sessionStorage.getItem('resetOtp');
+  const email = location.state?.email;
+  const otp = location.state?.otp;
+
+  // const email = location.state?.email || sessionStorage.getItem("resetEmail");
+
+  // const otp = sessionStorage.getItem('resetOtp');
 
   const navigate = useNavigate();
   const {
@@ -31,11 +35,12 @@ const Resetpassword = () => {
     resolver: zodResolver(resetpasswordSchema),
     mode: 'onChange', // validate on input change
   });
-  if (!email || !otp) {
-    toast.error(t.auth.session_expired);
-    navigate(getLocalizedPath('/forgot-password', language));
-    return;
-  }
+  useEffect(() => {
+    if (!email || !otp) {
+      toast.error(t.auth.session_expired);
+      navigate(getLocalizedPath('/forgot-password', language));
+    }
+  }, [email, otp]);
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     console.log(email, otp, data.password);
@@ -45,6 +50,7 @@ const Resetpassword = () => {
         otp,
         newPassword: data.password,
       };
+      console.log(payload);
       const res = await ResetPassword(payload).unwrap();
       toast.success(t.auth.changepassword_success);
       sessionStorage.removeItem('resetEmail');
@@ -58,6 +64,9 @@ const Resetpassword = () => {
       }
       toast.error(error?.data?.message);
     }
+
+    sessionStorage.removeItem('resetEmail');
+    sessionStorage.removeItem('resetOtp');
   };
   console.log('isValid', isValid);
   return (

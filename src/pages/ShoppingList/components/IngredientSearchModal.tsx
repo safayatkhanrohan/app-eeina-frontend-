@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGetAllIngredientQuery } from '@/redux/Features/Ingrediant/IngrediantApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2, Plus } from 'lucide-react';
+import { Search, Loader2, Plus, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import {
     Dialog,
@@ -26,12 +26,23 @@ interface IngredientSearchModalProps {
     onClose: () => void;
     onAdd: (item: any) => void;
     isLoading?: boolean;
+    title?: string;
+    confirmLabel?: string;
+    initialQuery?: string;
 }
 
-export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoading }: IngredientSearchModalProps) {
+export default function IngredientSearchModal({
+    isOpen,
+    onClose,
+    onAdd,
+    isLoading,
+    title,
+    confirmLabel,
+    initialQuery = '',
+}: IngredientSearchModalProps) {
     const { t, language } = useLanguage();
-    const [query, setQuery] = useState('');
-    const [debouncedQuery, setDebouncedQuery] = useState('');
+    const [query, setQuery] = useState(initialQuery);
+    const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const [quantity, setQuantity] = useState(1);
     const [unit, setUnit] = useState('kg');
@@ -39,6 +50,14 @@ export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoadin
     // Pagination state
     const [page, setPage] = useState(1);
     const [allIngredients, setAllIngredients] = useState<any[]>([]);
+
+    // Reset query when modal opens with new initialQuery
+    useEffect(() => {
+        if (isOpen) {
+            setQuery(initialQuery);
+            setDebouncedQuery(initialQuery);
+        }
+    }, [isOpen, initialQuery]);
 
     // Debounce search
     useEffect(() => {
@@ -59,7 +78,7 @@ export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoadin
     const totalIngredients = data?.data?.pagination?.totalCount || 0;
     const hasMore = allIngredients.length < totalIngredients;
 
-    // Reset ingredients when query changes
+    // Reset ingredients when debounced query changes
     useEffect(() => {
         setPage(1);
         setAllIngredients([]);
@@ -97,8 +116,6 @@ export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoadin
         };
 
         onAdd(payload);
-        // Optional: Close on add or keep open? 
-        // If keep open, show success feedback (handled by parent toast) and clear selection
         setSelectedItem(null);
         setQuantity(1);
     };
@@ -107,7 +124,7 @@ export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoadin
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="max-w-4xl h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
                 <DialogHeader className="px-6 py-4 border-b flex-shrink-0">
-                    <DialogTitle>{t.shopping_list?.add_item || 'Add Item'}</DialogTitle>
+                    <DialogTitle>{title || t.shopping_list?.add_item || 'Add Item'}</DialogTitle>
                 </DialogHeader>
 
                 <div className="flex flex-col flex-1 min-h-0">
@@ -213,7 +230,14 @@ export default function IngredientSearchModal({ isOpen, onClose, onAdd, isLoadin
                                     disabled={isLoading}
                                     className="bg-primaryColor hover:bg-green-700 text-white min-w-[100px] h-10"
                                 >
-                                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4 mr-2" /> {t.shopping_list?.add || 'Add'}</>}
+                                    {isLoading ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <>
+                                            {confirmLabel ? <RefreshCw className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
+                                            {confirmLabel || t.shopping_list?.add || 'Add'}
+                                        </>
+                                    )}
                                 </Button>
                             </div>
                         </div>

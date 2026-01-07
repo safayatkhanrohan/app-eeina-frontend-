@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Flame, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StreakProps {
   currentStreak: number;
@@ -10,6 +11,7 @@ interface StreakProps {
 }
 
 const Streak: React.FC<StreakProps> = ({ currentStreak, maxStreak, className }) => {
+  const {language,t}= useLanguage()
   return (
     <Card className={cn("relative overflow-hidden border-orange-100 bg-gradient-to-br from-orange-50 to-white", className)}>
       <div className="absolute top-0 right-0 p-3 opacity-10">
@@ -20,11 +22,11 @@ const Streak: React.FC<StreakProps> = ({ currentStreak, maxStreak, className }) 
         <div className="flex items-start justify-between">
             <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-orange-600 shadow-sm backdrop-blur-sm border border-orange-100/50">
               <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
-              <span>ON FIRE</span>
+              <span>{t.goals.onFire}</span>
             </div>
             <div className="flex items-center gap-1.5 rounded-full bg-yellow-50 px-2.5 py-1 text-[11px] font-medium text-yellow-700 border border-yellow-100">
                <Trophy className="w-3 h-3 text-yellow-600" />
-               <span>Best: {maxStreak}</span>
+               <span>{t.goals.best}: {maxStreak}</span>
             </div>
         </div>
 
@@ -32,11 +34,11 @@ const Streak: React.FC<StreakProps> = ({ currentStreak, maxStreak, className }) 
           <span className="text-5xl font-extrabold tracking-tight text-gray-900 leading-none">
             {currentStreak}
           </span>
-          <span className="text-base font-medium text-gray-500 mb-1">days</span>
+          <span className="text-base font-medium text-gray-500 mb-1">{t.goals.day}</span>
         </div>
 
         <div className="text-xs font-medium text-orange-600/80">
-          Keep it up! You're doing great.
+         {t.goals.keepItUp}
         </div>
       </div>
       

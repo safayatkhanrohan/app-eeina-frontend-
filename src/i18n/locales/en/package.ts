@@ -1,10 +1,9 @@
 import { PackageTranslations } from "../../types/package";
 
 export const packageTrans: PackageTranslations = {
-  upgradeanytime: "Upgrade Anytime",
-  upgradeanytimetitle: "Choose the plan that works for you",
-  upgradeanytimedusc:
-    "Get access to all features and enjoy a better experience",
+  upgradeanytime: "Start for free and upgrade anytime!",
+  upgradeanytimetitle: "Choose the plan that suits your nutrition and goals.",
+  upgradeanytimedusc:"Whether you’re just starting out or scaling up, EEINA offers flexible plans to meet your needs.",
   BestDeals: "Best Deals",
   month: "month",
   annual: "year",

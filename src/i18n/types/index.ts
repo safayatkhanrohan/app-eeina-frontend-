@@ -19,3 +19,5 @@ export * from './goalSetup';
 export * from './GoalsDashboard';
 export * from './nutritionist';
 export * from './package';
+export * from './Subscription';
+export * from './payment';
