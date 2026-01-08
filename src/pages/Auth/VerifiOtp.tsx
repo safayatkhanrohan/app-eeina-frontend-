@@ -1,19 +1,27 @@
-import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent, JSX } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { MailCheck } from "lucide-react";
-import { toast } from "sonner";
+import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent, JSX } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { MailCheck } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   useResendOtpMutation,
   useVerifyOtpMutation,
-} from "@/redux/Features/Auth/authApi";
-import { getLocalizedPath } from "@/lib/getLocalizedPath";
+  useSendPhoneOtpMutation,
+} from '@/redux/Features/Auth/authApi';
+import { getLocalizedPath } from '@/lib/getLocalizedPath';
 
+/**
+ * VerifyOtp Component
+ *
+ * Handles email verification via OTP.
+ * After successful email verification, if phone number is provided,
+ * it will trigger phone OTP and redirect to phone verification.
+ */
 export const VerifyOtp = (): JSX.Element => {
   const { t, language } = useLanguage();
-  const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(''));
   const [isVerifying, setIsVerifying] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0); // seconds left
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -21,24 +29,28 @@ export const VerifyOtp = (): JSX.Element => {
   const location = useLocation();
   const [verifyOtp] = useVerifyOtpMutation();
   const [resendOtp] = useResendOtpMutation();
-  const email = location.state?.email || sessionStorage.getItem("resetEmail");
-const mode = location.state?.mode || "verify";
-console.log("mode",mode)
+  const email = location.state?.email || sessionStorage.getItem('resetEmail');
+  const mode = location.state?.mode || 'verify';
+  console.log('mode', mode);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
     if (!email) {
       toast.error(t.auth.otp_missing_email);
-      navigate(getLocalizedPath("/signup", language));
+      navigate(getLocalizedPath('/signup', language));
     }
+
+    // Store phone in session for persistence
+    if (phone) sessionStorage.setItem('userPhone', phone);
   }, []);
+
   // Countdown effect
   useEffect(() => {
     if (resendCooldown === 0) return;
-    const billingPeriod = setbillingPeriod(() => {
+    const timer = setInterval(() => {
       setResendCooldown((prev) => prev - 1);
     }, 1000);
-    return () => clearbillingPeriod(billingPeriod);
+    return () => clearInterval(timer);
   }, [resendCooldown]);
 
   const handleChange = (element: HTMLInputElement, index: number) => {
@@ -48,20 +60,20 @@ console.log("mode",mode)
     newOtp[index] = element.value;
     setOtp(newOtp);
 
-    if (element.value !== "" && index < 5) {
+    if (element.value !== '' && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+    if (e.key === 'Backspace' && otp[index] === '' && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
-  const redirectTo = location.state?.redirectTo || "/";
+
   const handleVerify = async () => {
     setIsVerifying(true);
-    const enteredOtp = otp.join("");
+    const enteredOtp = otp.join('');
 
     if (!email) return;
 
@@ -72,33 +84,55 @@ console.log("mode",mode)
     }
 
     try {
-        if (mode === "reset") {
-      sessionStorage.setItem("resetOtp", enteredOtp);
+      if (mode === 'reset') {
+        sessionStorage.setItem('resetOtp', enteredOtp);
 
-      navigate(getLocalizedPath(redirectTo, language), {
-        state: {
-          email,
-          otp: enteredOtp,
-        },
-      });
+        navigate(getLocalizedPath(redirectTo, language), {
+          state: {
+            email,
+            otp: enteredOtp,
+          },
+        });
 
-      return; 
-    }
+        return;
+      }
       await verifyOtp({ email, otp: enteredOtp }).unwrap();
       toast.success(t.auth.otp_success);
-      navigate(getLocalizedPath(redirectTo, language),{
-        state: {
-          email,
-          otp: enteredOtp,
-        },
-      });
+      sessionStorage.setItem('resetOtp', enteredOtp);
 
+      // Check if phone verification is needed
+      if (redirectTo === '/verify-phone-otp' && phone) {
+        try {
+          // Send phone OTP before redirecting
+          await sendPhoneOtp({ phone, email }).unwrap();
+          toast.success(t.auth?.phone_otp_sent || 'Verification code sent to your phone');
+
+          navigate(getLocalizedPath('/verify-phone-otp', language), {
+            state: {
+              email,
+              phone,
+              redirectTo: '/goals-setup', // Final destination after phone verification
+            },
+          });
+        } catch (phoneError: any) {
+          console.error('Phone OTP send error:', phoneError);
+          // If phone OTP fails, still proceed to goals setup
+          toast.warning(
+            t.auth?.phone_otp_send_failed ||
+              'Failed to send phone verification. You can verify later.',
+          );
+          navigate(getLocalizedPath('/goals-setup', language));
+        }
+      } else {
+        // No phone verification needed, go to redirect destination
+        navigate(getLocalizedPath(redirectTo, language));
+      }
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.message || t.auth.otp_failed);
+      toast.error(error?.data?.message || t.auth.otp_failed);
     } finally {
       setIsVerifying(false);
-      setOtp(new Array(6).fill(""));
+      setOtp(new Array(6).fill(''));
     }
   };
 
@@ -124,9 +158,7 @@ console.log("mode",mode)
               <MailCheck className="h-10 w-10 text-primaryColor" />
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {t.auth.verify_account}
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{t.auth.verify_account}</h2>
             <p className="text-gray-600 mb-8">{t.auth.sent_code_msg}</p>
 
             <div className="flex justify-center gap-2 sm:gap-3 mb-8">
@@ -136,12 +168,8 @@ console.log("mode",mode)
                   type="text"
                   maxLength={1}
                   value={data}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleChange(e.target, index)
-                  }
-                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
-                    handleKeyDown(e, index)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target, index)}
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
                   ref={(el) => (inputRefs.current[index] = el)}
                   className="w-8 h-8 sm:w-14 sm:h-14 text-center text-base sm:text-2xl font-semibold border border-gray-300 rounded-lg focus:border-primaryColor focus:ring-1 focus:ring-primaryColor transition"
                 />
@@ -158,19 +186,15 @@ console.log("mode",mode)
             </Button>
 
             <div className="mt-6 text-sm text-gray-600">
-              {t.auth.didnt_receive_code}{" "}
+              {t.auth.didnt_receive_code}{' '}
               <button
                 onClick={handleResendOtp}
                 disabled={resendCooldown > 0}
                 className={`font-semibold text-primaryColor hover:underline focus:outline-none ${
-                  resendCooldown > 0
-                    ? "opacity-50 cursor-not-allowed hover:underline-none "
-                    : ""
+                  resendCooldown > 0 ? 'opacity-50 cursor-not-allowed hover:underline-none ' : ''
                 }`}
               >
-                {resendCooldown > 0
-                  ? `${t.auth.resend_after} ${resendCooldown}s`
-                  : t.auth.resend}
+                {resendCooldown > 0 ? `${t.auth.resend_after} ${resendCooldown}s` : t.auth.resend}
               </button>
             </div>
           </CardContent>
