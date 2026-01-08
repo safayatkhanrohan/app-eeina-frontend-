@@ -7,9 +7,25 @@ import { useGetPublicRecipeQuery } from '../../redux/Features/Recipe/RecipeApi';
 import { GridView } from '../Recipe/GridView';
 import { RecipiSkeleton } from '../ui/skeletons/RecipiSkeleton';
 import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export const RecipeGrid = ({ debouncedQuery }: { debouncedQuery: string }) => {
+interface RecipeGridProps {
+  debouncedQuery: string;
+  category?: string;
+  difficulty?: string;
+  minTime?: number;
+  maxTime?: number;
+  ingredients?: string;
+}
+
+export const RecipeGrid = ({
+  debouncedQuery,
+  category,
+  difficulty,
+  minTime,
+  maxTime,
+  ingredients,
+}: RecipeGridProps) => {
   const [page, setPage] = useState(1);
   const [allRecipes, setAllRecipes] = useState<any[]>([]);
   const limit = 8;
@@ -18,8 +34,13 @@ export const RecipeGrid = ({ debouncedQuery }: { debouncedQuery: string }) => {
     q: debouncedQuery || undefined,
     page,
     limit,
+    category,
+    difficulty,
+    minTime,
+    maxTime,
+    ingredients,
   });
-console.log("debouncedQuery",debouncedQuery)
+  console.log("debouncedQuery", debouncedQuery)
   const currentUser = useAppSelector((state) => state.auth.user);
   const { t, language } = useLanguage();
   const userId = currentUser?._id;
@@ -40,9 +61,14 @@ console.log("debouncedQuery",debouncedQuery)
   }, [newRecipes, page]);
 
   // reset recipes when search changes
+  const prevQueryRef = useRef(debouncedQuery);
+
   useEffect(() => {
-    setPage(1);
-    setAllRecipes([]);
+    if (prevQueryRef.current !== debouncedQuery) {
+      setPage(1);
+      setAllRecipes([]);
+      prevQueryRef.current = debouncedQuery;
+    }
   }, [debouncedQuery]);
 
   const normalizedRecipes = useNormalizedRecipes(allRecipes);
