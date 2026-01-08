@@ -17,6 +17,7 @@ import { Pagination } from '../../components/ui/Pagination';
 
 import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet';
 import { FilterSection } from './components/FilterSection';
+import { IngredientFilter } from './components/IngredientFilter';
 import { Category, CategoryType } from './types';
 import { useGetAllIngredientQuery } from '@/redux/Features/Ingrediant/IngrediantApi';
 
@@ -28,13 +29,20 @@ export const Explore = (): JSX.Element => {
   const [selectedCuisine, setSelectedCuisine] = useState<string[]>([]);
   const [selectedMealType, setSelectedMealType] = useState<string[]>([]);
   const [selectedDiet, setSelectedDiet] = useState<string[]>([]);
+  /* New State for Ingredient Search */
+  const [ingredientSearch, setIngredientSearch] = useState('');
+  const [debouncedIngredientSearch] = useDebounce(ingredientSearch, 500);
+
   const [selectedIngredient, setSelectedIngredient] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [minTime, setMinTime] = useState<number | null>(null);
   const [maxTime, setMaxTime] = useState<number | null>(null);
+
+  /* Updated Query: Search overrides "Featured" */
   const { data: ingredientData, isLoading: isIngredientLoading } = useGetAllIngredientQuery({
     limit: 20,
-    isFeatured: true,
+    isFeatured: !debouncedIngredientSearch ? true : undefined,
+    q: debouncedIngredientSearch || undefined,
   });
 
   const [page, setPage] = useState(1);
@@ -92,7 +100,7 @@ export const Explore = (): JSX.Element => {
     setter(value);
     setPage(1);
   };
-console.log("selectedCategory",selectedCategory)
+  console.log("selectedCategory", selectedCategory)
   const clearFilters = () => {
     setSelectedCategory([]);
     setSelectedCuisine([]);
@@ -101,6 +109,7 @@ console.log("selectedCategory",selectedCategory)
     setSelectedIngredient([]);
     setSelectedDifficulty('All');
     setSearchQuery('');
+    setIngredientSearch(''); // Clear ingredient search too
     setPage(1);
   };
 
@@ -117,6 +126,7 @@ console.log("selectedCategory",selectedCategory)
 
   // Helper to find label by slug
   const getLabel = (slug: string, collection: any[]) => {
+    // Check both local ingredients list AND current ingredients logic to prevent display bugs if an item is not in the featured list
     const item = collection.find((c) => c.slug[language] === slug);
     return item ? item.name[language] : slug;
   };
@@ -126,7 +136,7 @@ console.log("selectedCategory",selectedCategory)
       id: `ingredient-${slug}`,
       label: language === 'ar' ? 'المكونات' : 'Ingredients',
       value: slug,
-      displayValue: getLabel(slug, ingredients),
+      displayValue: getLabel(slug, ingredients), // Might need optimization if ingredient not in current page list
       onRemove: () => setSelectedIngredient(selectedIngredient.filter((s) => s !== slug)),
       isActive: true,
     })),
@@ -191,13 +201,15 @@ console.log("selectedCategory",selectedCategory)
     },
   ].filter((f) => f.isActive);
 
-  const FilterContent = () => (
+  const renderFilterContent = () => (
     <div className="flex flex-col gap-5">
-      <FilterSection
+      <IngredientFilter
         title={language === 'ar' ? 'المكونات' : 'Ingredients'}
         items={ingredients}
         selected={selectedIngredient}
         onChange={(val) => handleFilterChange(setSelectedIngredient, val)}
+        onSearchChange={setIngredientSearch}
+        searchValue={ingredientSearch}
         showImage={true}
       />
 
@@ -276,9 +288,8 @@ console.log("selectedCategory",selectedCategory)
                 }}
               >
                 <span
-                  className={`text-[15px] font-normal ${
-                    active ? 'text-primaryColor font-medium' : 'text-gray-600'
-                  }`}
+                  className={`text-[15px] font-normal ${active ? 'text-primaryColor font-medium' : 'text-gray-600'
+                    }`}
                 >
                   {language === 'ar' ? `حتى ${time} دقيقة` : `Up to ${time} min`}
                 </span>
@@ -320,7 +331,7 @@ console.log("selectedCategory",selectedCategory)
                   <h3 className="text-lg font-bold mb-4">
                     {language === 'ar' ? 'تصفية' : 'Filters'}
                   </h3>
-                  <FilterContent />
+                  {renderFilterContent()}
                   <Button
                     onClick={clearFilters}
                     variant="ghost"
@@ -354,16 +365,16 @@ console.log("selectedCategory",selectedCategory)
                   selectedIngredient.length > 0 ||
                   selectedDifficulty !== 'All' ||
                   searchQuery) && (
-                  <button
-                    onClick={clearFilters}
-                    className="text-xs text-red-500 hover:text-red-600 font-medium flex items-center gap-1"
-                  >
-                    <X className="w-3 h-3" />
-                    {language === 'ar' ? 'مسح' : 'Clear'}
-                  </button>
-                )}
+                    <button
+                      onClick={clearFilters}
+                      className="text-xs text-red-500 hover:text-red-600 font-medium flex items-center gap-1"
+                    >
+                      <X className="w-3 h-3" />
+                      {language === 'ar' ? 'مسح' : 'Clear'}
+                    </button>
+                  )}
               </div>
-              <FilterContent />
+              {renderFilterContent()}
             </div>
           </div>
 
