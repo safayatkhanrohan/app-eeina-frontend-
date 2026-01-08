@@ -1,16 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getLocalizedPath } from "@/lib/getLocalizedPath";
-import { useForgotPasswordMutation } from "@/redux/Features/Auth/authApi";
-import {
-  forgetPasswordSchema,
-  forgetPasswordFormData,
-} from "@/schemas/auth/authSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { JSX } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getLocalizedPath } from '@/lib/getLocalizedPath';
+import { useForgotPasswordMutation } from '@/redux/Features/Auth/authApi';
+import { forgetPasswordSchema, forgetPasswordFormData } from '@/schemas/auth/authSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { JSX } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Forgetpassword = (): JSX.Element => {
   const { t, isRTL, language } = useLanguage();
@@ -22,23 +19,23 @@ const Forgetpassword = (): JSX.Element => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<forgetPasswordFormData>({
     resolver: zodResolver(forgetPasswordSchema),
-    mode: "onChange", // validate on input change
+    mode: 'onChange', // validate on input change
   });
 
   const onSubmit = async (data: forgetPasswordFormData) => {
     try {
       const res = await forgotPassword(data).unwrap();
       toast.success(t.auth.verifycode);
-      sessionStorage.setItem("resetEmail", data.email);
+      sessionStorage.setItem('resetEmail', data.email);
 
-      navigate(getLocalizedPath("/verify-otp", language), {
-        state: { email: data.email, redirectTo: "/Resetpassword", mode: "reset", },
+      navigate(getLocalizedPath('/verify-otp', language), {
+        state: { email: data.email, redirectTo: '/Resetpassword', mode: 'reset' },
       });
     } catch (error: any) {
       toast.error(error?.data?.message);
     }
   };
-  console.log("isValid", isValid);
+  console.log('isValid', isValid);
   return (
     <div className="container ">
       <div className="flex flex-col lg:flex-row justify-between items-stretch gap-5 lg:gap-7 xl2:gap-16 py-16">
@@ -48,9 +45,7 @@ const Forgetpassword = (): JSX.Element => {
               {t.auth.ForgitpasswordTitle}
             </h2>
             <div className="max-h-fit bg-[#FBFCFC] lg:shadow  rounded-[32px] py-5 flex flex-col gap-5  flex-1  lg:px-8 lg:py-16">
-              <h3 className="text-[25px] lg:text-[36px] font-medium">
-                {t.auth.Forgotpassword}
-              </h3>
+              <h3 className="text-[25px] lg:text-[36px] font-medium">{t.auth.Forgotpassword}</h3>
               <p className="text-[14px] font-medium text-[#3F4247] mb-1">
                 {t.auth.Forgotpasswordtitle}
               </p>
@@ -63,7 +58,7 @@ const Forgetpassword = (): JSX.Element => {
                   <input
                     type="email"
                     placeholder={t.auth.placeholder_email}
-                    {...register("email")}
+                    {...register('email')}
                     className=" block h-12 w-full px-3 pb-2.5 pt-4 text-base text-gray-800 !bg-white rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-1 focus:ring-[#DCDBDD] focus:border-[#DCDBDD] peer"
                   />
                   <label
@@ -77,9 +72,7 @@ const Forgetpassword = (): JSX.Element => {
                     {t.auth.email}
                   </label>
                   {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -101,11 +94,8 @@ const Forgetpassword = (): JSX.Element => {
                 </Button>
                 <p className="text-center text-[14px] font-medium text-[#3F4247] mb-1">
                   {t.auth.Justremember}
-                  <Link
-                    to={getLocalizedPath("/login", language)}
-                    className="!text-[#34694F]"
-                  >
-                    {" "}
+                  <Link to={getLocalizedPath('/login', language)} className="!text-[#34694F]">
+                    {' '}
                     {t.auth.sign_in}
                   </Link>
                 </p>
@@ -125,4 +115,4 @@ const Forgetpassword = (): JSX.Element => {
   );
 };
 
-export default Forgetpassword;
+export { Forgetpassword };

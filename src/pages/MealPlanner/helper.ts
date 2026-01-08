@@ -142,6 +142,8 @@ export function formatMealPlans(
             itemType: getItemType(meal),
             mealType: mealType, // Keep slug for operations
             serving: meal.serving,
+            ingredients: plannerItem.ingredients || [],
+            itemId: plannerItem._id, // Actual Recipe/Food ID
           });
         });
       }

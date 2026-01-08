@@ -16,6 +16,7 @@ export interface PlannerItem {
     fat: { amount: number };
   };
   time: number;
+  ingredients?: any[];
 }
 
 // single meal inside meal plan array

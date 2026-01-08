@@ -1,17 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getLocalizedPath } from "@/lib/getLocalizedPath";
-import { useResetPasswordMutation } from "@/redux/Features/Auth/authApi";
-import {
-  ResetPasswordFormData,
-  resetpasswordSchema,
-} from "@/schemas/auth/authSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getLocalizedPath } from '@/lib/getLocalizedPath';
+import { useResetPasswordMutation } from '@/redux/Features/Auth/authApi';
+import { ResetPasswordFormData, resetpasswordSchema } from '@/schemas/auth/authSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Resetpassword = () => {
   const { t, isRTL, language } = useLanguage();
@@ -27,7 +24,7 @@ const Resetpassword = () => {
 
   // const email = location.state?.email || sessionStorage.getItem("resetEmail");
 
-  // const otp = sessionStorage.getItem("resetOtp");
+  // const otp = sessionStorage.getItem('resetOtp');
 
   const navigate = useNavigate();
   const {
@@ -36,12 +33,12 @@ const Resetpassword = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetpasswordSchema),
-    mode: "onChange", // validate on input change
+    mode: 'onChange', // validate on input change
   });
   useEffect(() => {
     if (!email || !otp) {
       toast.error(t.auth.session_expired);
-      navigate(getLocalizedPath("/forgot-password", language));
+      navigate(getLocalizedPath('/forgot-password', language));
     }
   }, [email, otp]);
 
@@ -56,23 +53,22 @@ const Resetpassword = () => {
       console.log(payload);
       const res = await ResetPassword(payload).unwrap();
       toast.success(t.auth.changepassword_success);
-      navigate(getLocalizedPath("/login", language));
+      sessionStorage.removeItem('resetEmail');
+      sessionStorage.removeItem('resetOtp');
+      navigate(getLocalizedPath('/login', language));
     } catch (error: any) {
-      console.log("newPassword", error);
-      if (
-        error?.data?.message ==
-        "Invalid or expired OTP. Please request a new one."
-      ) {
+      console.log('newPassword', error);
+      if (error?.data?.message == 'Invalid or expired OTP. Please request a new one.') {
         toast.error(t.auth.session_expired);
-        navigate(getLocalizedPath("/forgot-password", language));
+        navigate(getLocalizedPath('/forgot-password', language));
       }
       toast.error(error?.data?.message);
     }
 
-    sessionStorage.removeItem("resetEmail");
-    sessionStorage.removeItem("resetOtp");
+    sessionStorage.removeItem('resetEmail');
+    sessionStorage.removeItem('resetOtp');
   };
-  console.log("isValid", isValid);
+  console.log('isValid', isValid);
   return (
     <div className="container ">
       <div className="flex flex-col lg:flex-row justify-between items-stretch gap-5 lg:gap-7 xl2:gap-16 py-16">
@@ -82,9 +78,7 @@ const Resetpassword = () => {
               {t.auth.ForgitpasswordTitle}
             </h2>
             <div className="max-h-fit bg-[#FBFCFC] lg:shadow  rounded-[32px] py-5 flex flex-col gap-5  flex-1  lg:px-8 lg:py-16">
-              <h3 className="text-[25px] lg:text-[36px] font-medium">
-                {t.auth.createnewpassword}
-              </h3>
+              <h3 className="text-[25px] lg:text-[36px] font-medium">{t.auth.createnewpassword}</h3>
               <p className="text-[14px] font-medium text-[#3F4247] mb-1">
                 {t.auth.Createanaccounttitle}
               </p>
@@ -96,9 +90,9 @@ const Resetpassword = () => {
                 <div>
                   <div className="relative w-full">
                     <input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder={t.auth.placeholder_password}
-                      {...register("password")}
+                      {...register('password')}
                       className="block h-12 w-full px-3 pb-2.5 pt-4 text-[14px] xl2:text-base text-gray-800 bg-white rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-1 focus:ring-[#DCDBDD] focus:border-[#DCDBDD] peer"
                     />
                     <Button
@@ -106,7 +100,7 @@ const Resetpassword = () => {
                       variant="ghost"
                       size="icon"
                       className={`absolute top-1/2 transform -translate-y-1/2 hover:!bg-transparent ${
-                        isRTL ? "left-3" : "right-3"
+                        isRTL ? 'left-3' : 'right-3'
                       } text-gray-400 hover:text-gray-600`}
                       onClick={() => setShowPassword(!showPassword)}
                     >
@@ -138,9 +132,9 @@ const Resetpassword = () => {
                 <div>
                   <div className="relative">
                     <input
-                      type={showConfirmPassword ? "text" : "password"}
+                      type={showConfirmPassword ? 'text' : 'password'}
                       placeholder={t.auth.confirm_password}
-                      {...register("confirmPassword")}
+                      {...register('confirmPassword')}
                       className="block h-12 w-full px-3 pb-2.5 pt-4 text-[14px] xl2:text-base text-gray-800 bg-white rounded-xl border border-gray-300 appearance-none focus:outline-none focus:ring-1 focus:ring-[#DCDBDD] focus:border-[#DCDBDD] peer"
                     />
                     <Button
@@ -148,15 +142,9 @@ const Resetpassword = () => {
                       variant="ghost"
                       size="icon"
                       className="absolute top-1/2 right-2 -translate-y-1/2 h-8 w-8 text-gray-500 hover:!bg-transparent"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff size={20} />
-                      ) : (
-                        <Eye size={20} />
-                      )}
+                      {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </Button>
                     <label
                       htmlFor="floating_outlined"
@@ -208,4 +196,4 @@ const Resetpassword = () => {
   );
 };
 
-export default Resetpassword;
+export { Resetpassword };

@@ -59,8 +59,9 @@ import PaymentCallback from '@/pages/Payment/PaymentCallback';
 import PaymentFailed from '@/pages/Payment/PaymentFailed';
 import SubscriptionPage from '@/pages/Subscription/SubscriptionPage';
 import StartTrialPage from '@/pages/Payment/StartTrialPage';
-import Forgetpassword from '@/pages/Auth/Forgetpassword';
-import Resetpassword from '@/pages/Auth/Resetpassword';
+import { Forgetpassword } from '@/pages/Auth/Forgetpassword';
+import { Resetpassword } from '@/pages/Auth/Resetpassword';
+import { VerifyPhoneOtp } from '@/pages/Auth/VerifyPhoneOtp';
 
 // ------------------------------------------------------
 // ENGLISH ROUTES
@@ -73,6 +74,7 @@ const englishRoutes = [
       { path: '/login', element: <Login /> },
       { path: '/signup/*', element: <Signup /> },
       { path: '/verify-otp', element: <VerifyOtp /> },
+      { path: '/verify-phone-otp', element: <VerifyPhoneOtp /> }, // Phone SMS OTP verification route
       { path: '/forgot-password', element: <Forgetpassword /> },
       { path: '/Resetpassword', element: <Resetpassword /> },
       {
