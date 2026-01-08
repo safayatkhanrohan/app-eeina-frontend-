@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -10,6 +10,7 @@ import { IngredientInfoCard, RelatedRecipes } from './components';
 
 export const IngredientDetails = (): JSX.Element => {
   const { ingredientName, slug } = useParams<{ ingredientName: string; slug: string }>();
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const [showAllNutrients, setShowAllNutrients] = useState(false);
   const { data: ingrediantDetails } = useGetIngrediantBySlugQuery(slug as string);
@@ -28,7 +29,7 @@ export const IngredientDetails = (): JSX.Element => {
           <Button
             variant="ghost"
             className="text-gray-600 hover:text-gray-900 p-0"
-            onClick={() => window.history.back()}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             {language === 'ar' ? 'رجوع' : 'Back'}
