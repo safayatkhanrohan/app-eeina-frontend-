@@ -46,31 +46,37 @@ export const ShoppingItem = ({
   // Convert units for display
   const name = isCustom
     ? item?.name[language]
-    : (item?.item?.name[language] || item?.item?.name?.en || item?.name?.en);
+    : item?.item?.name[language] || item?.item?.name?.en || item?.name?.en;
 
   const { quantity: displayQuantity, unit: displayUnit } = convertUnit(
     item?.quantity,
-    item?.unit?.en || item?.unit?.[language] || item?.unit,
+    item?.unit?.en || item?.unit?.[language],
     unitSystem,
-    name
+    name,
   );
   return (
     <div
       key={item?._id}
-      className={`group flex items-center gap-3 p-2 rounded-lg border transition-all duration-200 mb-2 ${purchased
-        ? 'bg-gray-50/50 border-gray-100 opacity-75'
-        : 'bg-white border-gray-200 shadow-sm hover:shadow-md hover:border-primaryColor/30'
-        }`}
+      className={`group flex items-center gap-3 p-2 rounded-lg border transition-all duration-200 mb-2 ${
+        purchased
+          ? 'bg-gray-50/50 border-gray-100 opacity-75'
+          : 'bg-white border-gray-200 shadow-sm hover:shadow-md hover:border-primaryColor/30'
+      }`}
     >
       {/* Purchase status toggle checkbox */}
       <div
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center cursor-pointer transition-all flex-shrink-0 ml-1 ${purchased
-          ? 'bg-primaryColor border-primaryColor scale-100'
-          : 'border-gray-300 hover:border-primaryColor hover:scale-105 active:scale-95'
-          }`}
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center cursor-pointer transition-all flex-shrink-0 ml-1 ${
+          purchased
+            ? 'bg-primaryColor border-primaryColor scale-100'
+            : 'border-gray-300 hover:border-primaryColor hover:scale-105 active:scale-95'
+        }`}
         onClick={() => toggleItem(item._id)}
       >
-        <Check className={`w-3 h-3 text-white transition-opacity ${purchased ? 'opacity-100' : 'opacity-0'}`} />
+        <Check
+          className={`w-3 h-3 text-white transition-opacity ${
+            purchased ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
       </div>
 
       {/* Image (Left side now) */}
@@ -78,7 +84,9 @@ export const ShoppingItem = ({
         <img
           src={item?.item?.image?.url || '/ingrediant.png'}
           alt={item?.item?.name?.[language]}
-          className={`w-10 h-10 rounded-md object-cover border border-gray-100 flex-shrink-0 ${purchased ? 'grayscale opacity-50' : ''}`}
+          className={`w-10 h-10 rounded-md object-cover border border-gray-100 flex-shrink-0 ${
+            purchased ? 'grayscale opacity-50' : ''
+          }`}
         />
       )}
 
@@ -86,14 +94,16 @@ export const ShoppingItem = ({
       <div className="flex-1 min-w-0">
         <div className="flex flex-col justify-center">
           <span
-            className={`text-sm font-medium break-words leading-tight ${purchased && !isPdf ? 'line-through text-gray-400' : 'text-gray-900'
-              }`}
+            className={`text-sm font-medium break-words leading-tight ${
+              purchased && !isPdf ? 'line-through text-gray-400' : 'text-gray-900'
+            }`}
           >
-            {
-              isCustom
-                ? item?.name[language]
-                : (item?.item?.name[language] || item?.item?.name?.en || item?.name?.en).replace(/-/g, ' ')
-            }
+            {isCustom
+              ? item?.name[language]
+              : (item?.item?.name[language] || item?.item?.name?.en || item?.name?.en).replace(
+                  /-/g,
+                  ' ',
+                )}
           </span>
 
           {/* Quantity Badge - Subtle and below text if needed, or inline? Let's keep inline for compactness or below for clarity? 
