@@ -12,6 +12,7 @@ import {
   ShoppingCartIcon,
   Search,
   CalendarDays,
+  ArrowRightLeft,
 } from 'lucide-react';
 import {
   useAddCustomItemMutation,
@@ -62,6 +63,7 @@ export const ListDetails = (): JSX.Element => {
   const [groupBy, setGroupBy] = useState<'aisle' | 'recipe'>('recipe');
   const [activeTab, setActiveTab] = useState<'pending' | 'purchased'>('pending');
   const [swapItem, setSwapItem] = useState<any>(null); // State to track item being swapped
+  const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric');
 
   const { data, isLoading } = useGetSingleListQuery({
     id: listId!,
@@ -457,9 +459,10 @@ export const ListDetails = (): JSX.Element => {
         onSwap={handleInitiateSwap}
         isCustom={!userListsItems.some((ri: any) => ri._id === item._id)}
         isPdf={isPdf}
+        unitSystem={unitSystem}
       // displayName={getItemDisplayName(item)}
       // quantityDisplay={getQuantityDisplay(item)}
-      // recipeName={item.recipe?.title?.[language] || item.recipe?.title?.en}
+      // recipeName={item.recipe?._id ? (item.recipe?.title?.[language] || item.recipe?.title?.en) : undefined}
       />
     ));
 
@@ -609,10 +612,18 @@ export const ListDetails = (): JSX.Element => {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {/* checkout button */}
                     <Button variant="secondary" onClick={handleCheckout}>
                       <span className="hidden sm:inline-block">{t.shopping_list.checkout}</span>
                       <ShoppingCartIcon className="w-4 h-4 sm:ml-2" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setUnitSystem((prev) => (prev === 'metric' ? 'imperial' : 'metric'))}
+                      className="min-w-[80px]"
+                    >
+                      <ArrowRightLeft className="w-4 h-4 mr-2" />
+                      {unitSystem === 'metric' ? 'Metric' : 'Imperial'}
                     </Button>
                     <Button onClick={handleDownloadPDF} variant="outline" size="sm">
                       <Download className="w-4 h-4" />

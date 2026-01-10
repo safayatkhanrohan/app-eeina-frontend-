@@ -1,5 +1,6 @@
 import { Check, Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
+import { convertUnit } from '@/utils/unitConversion';
 
 /**
  * Props interface for the ShoppingItem component
@@ -19,6 +20,8 @@ interface ShoppingItemProps {
   isCustom?: boolean;
   /** Whether this component is being rendered for PDF export */
   isPdf?: boolean;
+  /** The unit system to display (metric or imperial) */
+  unitSystem?: 'metric' | 'imperial';
 }
 
 /**
@@ -34,10 +37,23 @@ export const ShoppingItem = ({
   onSwap,
   isCustom = false,
   isPdf = false,
+  unitSystem = 'metric',
 }: ShoppingItemProps) => {
   // Check if the item has been purchased
   const purchased = item?.status === 'purchased';
   console.log('it', item);
+
+  // Convert units for display
+  const name = isCustom
+    ? item?.name[language]
+    : (item?.item?.name[language] || item?.item?.name?.en || item?.name?.en);
+
+  const { quantity: displayQuantity, unit: displayUnit } = convertUnit(
+    item?.quantity,
+    item?.unit?.en || item?.unit?.[language] || item?.unit,
+    unitSystem,
+    name
+  );
   return (
     <div
       key={item?._id}
@@ -83,9 +99,10 @@ export const ShoppingItem = ({
           {/* Quantity Badge - Subtle and below text if needed, or inline? Let's keep inline for compactness or below for clarity? 
                  Let's stay inline or just below if long. Actually, let's put it next to text if space, or allow wrap.
              */}
+          {/* Quantity Badge */}
           {(item?.quantity || item?.unit) && (
             <span className={`text-xs mt-0.5 text-gray-500`}>
-              {item.quantity} {item.unit?.en || item.unit?.[language] || ''}
+              {displayQuantity} {displayUnit}
             </span>
           )}
         </div>

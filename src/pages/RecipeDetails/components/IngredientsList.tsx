@@ -135,11 +135,10 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({
                 className={`
                     absolute ${isRTL ? 'left-0' : 'right-0'}  top-full z-30 mt-2 w-48 rounded-lg bg-white shadow-lg p-3
                     transform transition-all duration-200 ease-out
-                    ${
-                      open
-                        ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
-                        : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
-                    }
+                    ${open
+                    ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                    : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+                  }
                   `}
               >
                 {[
@@ -188,8 +187,21 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({
         {/* Ingredients Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {ingredients.map((ingredient) => {
-            const converted = convertUnit(ingredient.quantity, ingredient.unit, unitSystem);
-            const displayUnit = unitLabels[language]?.[converted.unit] || converted.unit;
+            let displayQuantity = ingredient.quantity;
+            let displayUnit = ingredient.unit;
+
+            if (unitSystem !== 'original') {
+              const result = convertUnit(
+                ingredient.quantity,
+                ingredient.unit,
+                unitSystem as 'metric' | 'imperial', // Type assertion as we filtered 'original'
+                ingredient.item || ingredient.rawIngr
+              );
+              displayQuantity = result.quantity;
+              displayUnit = result.unit;
+            }
+
+            const displayUnitLabel = unitLabels[language]?.[displayUnit] || displayUnit;
 
             return (
               <div
@@ -203,11 +215,10 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({
                 {/* Ingredient Link with Image */}
                 <Link
                   to={`/ingredient/${ingredient?.ingredient?.slug?.en}`}
-                  className={`flex-1 flex items-center gap-3 text-sm hover:text-primaryColor transition-colors ${
-                    checkedIngredients.includes(ingredient.id)
-                      ? 'line-through text-gray-500'
-                      : 'text-gray-900'
-                  }`}
+                  className={`flex-1 flex items-center gap-3 text-sm hover:text-primaryColor transition-colors ${checkedIngredients.includes(ingredient.id)
+                    ? 'line-through text-gray-500'
+                    : 'text-gray-900'
+                    }`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Ingredient Image */}
@@ -224,8 +235,8 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({
                   {/* Ingredient Text */}
                   <span className="whitespace-normal break-words">
                     {/* {`${ingredient.quantity > 0 ? `${ingredient.quantity} ` : ''}${ingredient.unit} ${ingredient.rawIngr}`} */}
-                    {ingredient.quantity > 0
-                      ? `${converted.quantity} ${displayUnit} ${ingredient.rawIngr}`
+                    {displayQuantity > 0
+                      ? `${displayQuantity} ${displayUnitLabel} ${ingredient.rawIngr}`
                       : ingredient.rawIngr}
                   </span>
                 </Link>
