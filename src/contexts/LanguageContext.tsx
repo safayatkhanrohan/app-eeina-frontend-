@@ -16,10 +16,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const path = window.location.pathname;
 
-    if (!path.startsWith('/ar')) {
-      setLanguage('en');
-    } else {
+    if (path === '/' || path.startsWith('/ar')) {
       setLanguage('ar');
+    } else {
+      setLanguage('en');
     }
   }, []);
 
