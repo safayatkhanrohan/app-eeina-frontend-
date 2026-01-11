@@ -195,12 +195,6 @@ export const ListDetails = (): JSX.Element => {
         items: [payload],
       }).unwrap();
 
-      toast.success(
-        swapItem
-          ? t?.shopping_list?.item_swapped_success || 'Item swapped successfully'
-          : t?.shopping_list?.item_added_success || 'Item added successfully',
-      );
-
       // Close modal and reset swap item
       setIsIngredientModalOpen(false);
       setSwapItem(null);
@@ -303,8 +297,9 @@ export const ListDetails = (): JSX.Element => {
       }
     }
 
-    return category || t?.shopping_list?.uncategorized || 'Uncategorized';
+    return category || t?.shopping_list?.uncategorized;
   };
+
   const getCategoryStats = () => {
     const allItems = [...userListsItems, ...userListsCustomItems];
     const stats: Record<string, { total: number; completed: number }> = {};
@@ -351,19 +346,17 @@ export const ListDetails = (): JSX.Element => {
   // handle checkout
 
   const handleCheckout = () => {
-    // check if user has lcocation
-    // if not open location modal
-    if (purchasedItems.length > 0) {
-      if (!user?.location) {
-        setIsLocationModalOpen(true);
-      }
+    if (userListsItems.length === 0) {
+      toast.error(t?.shopping_list?.no_items_in_list);
+      return;
+    }
 
-      // or open choose store modal
-      else {
-        setIsChooseStoreModalOpen(true);
-      }
-    } else {
-      toast.error(t?.shopping_list?.no_items_in_list || 'No items in list');
+    if (!user?.location) {
+      setIsLocationModalOpen(true);
+    }
+    // or open choose store modal
+    else {
+      setIsChooseStoreModalOpen(true);
     }
   };
 
@@ -490,9 +483,9 @@ export const ListDetails = (): JSX.Element => {
         isCustom={!userListsItems.some((ri: any) => ri._id === item._id)}
         isPdf={isPdf}
         unitSystem={unitSystem}
-      // displayName={getItemDisplayName(item)}
-      // quantityDisplay={getQuantityDisplay(item)}
-      // recipeName={item.recipe?._id ? (item.recipe?.title?.[language] || item.recipe?.title?.en) : undefined}
+        // displayName={getItemDisplayName(item)}
+        // quantityDisplay={getQuantityDisplay(item)}
+        // recipeName={item.recipe?._id ? (item.recipe?.title?.[language] || item.recipe?.title?.en) : undefined}
       />
     ));
 
@@ -633,26 +626,29 @@ export const ListDetails = (): JSX.Element => {
             <Card>
               <CardContent className="p-4 sm:p-6">
                 <div
-                  className={`flex flex-col sm:flex-row ${isRTL ? 'items-start' : 'items-start'
-                    }  sm:items-center justify-between mb-6`}
+                  className={`flex flex-col sm:flex-row ${
+                    isRTL ? 'items-start' : 'items-start'
+                  }  sm:items-center justify-between mb-6`}
                 >
                   {/* Smart Tabs */}
                   <div className="flex items-center p-1 bg-gray-100 rounded-lg mb-4 sm:mb-0">
                     <button
                       onClick={() => setActiveTab('pending')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'pending'
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                        activeTab === 'pending'
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-900'
-                        }`}
+                      }`}
                     >
                       {t?.shopping_list?.pending_items || 'Pending'} ({pendingItems.length})
                     </button>
                     <button
                       onClick={() => setActiveTab('purchased')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'purchased'
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                        activeTab === 'purchased'
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-900'
-                        }`}
+                      }`}
                     >
                       {t?.shopping_list?.purchased_items || 'Purchased'} ({purchasedItems.length})
                     </button>
@@ -819,8 +815,9 @@ export const ListDetails = (): JSX.Element => {
                             <div
                               className="h-2 bg-primaryColor rounded-full transition-all"
                               style={{
-                                width: `${stats.total > 0 ? (stats.completed / stats.total) * 100 : 0
-                                  }%`,
+                                width: `${
+                                  stats.total > 0 ? (stats.completed / stats.total) * 100 : 0
+                                }%`,
                               }}
                             />
                           </div>
@@ -875,10 +872,10 @@ export const ListDetails = (): JSX.Element => {
         initialQuery={
           swapItem
             ? swapItem.name?.[language] ||
-            swapItem.name?.en ||
-            swapItem.item?.name?.[language] ||
-            swapItem.item?.name?.en ||
-            ''
+              swapItem.name?.en ||
+              swapItem.item?.name?.[language] ||
+              swapItem.item?.name?.en ||
+              ''
             : ''
         }
       />
