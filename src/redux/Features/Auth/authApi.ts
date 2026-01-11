@@ -45,7 +45,6 @@ const authApi = baseApi.injectEndpoints({
         body: forgotPasswordData,
         credentials: 'include',
       }),
-      invalidatesTags: ['User'],
     }),
 
     resetPassword: builder.mutation({
@@ -55,7 +54,24 @@ const authApi = baseApi.injectEndpoints({
         body: resetPasswordData,
         credentials: 'include',
       }),
-      invalidatesTags: ['User'],
+    }),
+
+    resendResetOtp: builder.mutation({
+      query: ({ email }) => ({
+        url: `/auth/resend-reset-otp`,
+        method: 'POST',
+        body: { email },
+        credentials: 'include',
+      }),
+    }),
+
+    verifyResetOtp: builder.mutation({
+      query: (body) => ({
+        url: `/auth/verify-reset-otp`,
+        method: 'POST',
+        body: body,
+        credentials: 'include',
+      }),
     }),
 
     // ==================== EMAIL OTP VERIFICATION ====================
@@ -65,7 +81,7 @@ const authApi = baseApi.injectEndpoints({
      */
     verifyOtp: builder.mutation({
       query: (body) => ({
-        url: `/auth/verify-otp`,
+        url: `/auth/verify-email-otp`,
         method: 'POST',
         body: body,
         credentials: 'include',
@@ -79,7 +95,7 @@ const authApi = baseApi.injectEndpoints({
      */
     resendOtp: builder.mutation({
       query: ({ email }) => ({
-        url: `/auth/resend-otp`,
+        url: `/auth/resend-email-otp`,
         method: 'POST',
         body: { email },
         credentials: 'include',
@@ -150,6 +166,8 @@ export const {
   // Password Management
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useResendResetOtpMutation,
+  useVerifyResetOtpMutation,
   // Email OTP
   useResendOtpMutation,
   useVerifyOtpMutation,

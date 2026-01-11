@@ -19,8 +19,7 @@ const Resetpassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
 
-  const email = location.state?.email;
-  const otp = location.state?.otp;
+  const { token, email } = location.state || {};
 
   // const email = location.state?.email || sessionStorage.getItem("resetEmail");
 
@@ -36,37 +35,27 @@ const Resetpassword = () => {
     mode: 'onChange', // validate on input change
   });
   useEffect(() => {
-    if (!email || !otp) {
+    if (!email || !token) {
       toast.error(t.auth.session_expired);
       navigate(getLocalizedPath('/forgot-password', language));
     }
-  }, [email, otp]);
+  }, [email, token]);
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    console.log(email, otp, data.password);
+    console.log(email, token, data.password);
     try {
       const payload = {
-        email,
-        otp,
+        token,
         newPassword: data.password,
       };
       console.log(payload);
       const res = await ResetPassword(payload).unwrap();
       toast.success(t.auth.changepassword_success);
-      sessionStorage.removeItem('resetEmail');
-      sessionStorage.removeItem('resetOtp');
       navigate(getLocalizedPath('/login', language));
     } catch (error: any) {
       console.log('newPassword', error);
-      if (error?.data?.message == 'Invalid or expired OTP. Please request a new one.') {
-        toast.error(t.auth.session_expired);
-        navigate(getLocalizedPath('/forgot-password', language));
-      }
       toast.error(error?.data?.message);
     }
-
-    sessionStorage.removeItem('resetEmail');
-    sessionStorage.removeItem('resetOtp');
   };
   console.log('isValid', isValid);
   return (

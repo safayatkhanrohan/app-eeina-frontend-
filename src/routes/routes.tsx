@@ -62,6 +62,7 @@ import StartTrialPage from '@/pages/Payment/StartTrialPage';
 import { Forgetpassword } from '@/pages/Auth/Forgetpassword';
 import { Resetpassword } from '@/pages/Auth/Resetpassword';
 import { VerifyPhoneOtp } from '@/pages/Auth/VerifyPhoneOtp';
+import { VerifyResetOtp } from '@/pages/Auth/VerifyResetOTP';
 
 // ------------------------------------------------------
 // ENGLISH ROUTES
@@ -75,6 +76,7 @@ const englishRoutes = [
       { path: '/signup/*', element: <Signup /> },
       { path: '/verify-otp', element: <VerifyOtp /> },
       { path: '/verify-phone-otp', element: <VerifyPhoneOtp /> }, // Phone SMS OTP verification route
+      { path: '/verify-reset-otp', element: <VerifyResetOtp /> }, // Phone SMS OTP verification route
       { path: '/forgot-password', element: <Forgetpassword /> },
       { path: '/Resetpassword', element: <Resetpassword /> },
       {

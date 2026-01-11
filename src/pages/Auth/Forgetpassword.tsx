@@ -28,7 +28,7 @@ const Forgetpassword = (): JSX.Element => {
       toast.success(t.auth.verifycode);
       sessionStorage.setItem('resetEmail', data.email);
 
-      navigate(getLocalizedPath('/verify-otp', language), {
+      navigate(getLocalizedPath('/verify-reset-otp', language), {
         state: { email: data.email, redirectTo: '/Resetpassword', mode: 'reset' },
       });
     } catch (error: any) {
