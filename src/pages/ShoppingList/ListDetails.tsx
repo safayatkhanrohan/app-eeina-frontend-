@@ -452,12 +452,25 @@ export const ListDetails = (): JSX.Element => {
 
     items.forEach((item) => {
       const recipeId = item.recipe?._id;
-      const recipeName = item.recipe?.title?.[language] || item.recipe?.title?.en;
+      const recipeTitle = item.recipe?.title?.[language] || item.recipe?.title?.en;
 
-      if (!grouped[recipeId]) grouped[recipeId] = [];
-      grouped[recipeId].push(item);
+      if (recipeId) {
+        // Use composite key to separate same recipe imported at different times
+        // This fixes the issue where multiple imports of the same recipe are merged
+        const uniqueKey = `${recipeId}_${item.createdAt || 'legacy'}`;
 
-      recipeNames[recipeId] = recipeName;
+        if (!grouped[uniqueKey]) grouped[uniqueKey] = [];
+        grouped[uniqueKey].push(item);
+
+        recipeNames[uniqueKey] = recipeTitle;
+      } else {
+        // Group all non-recipe items under 'other_items'
+        // This replaces the behavior where undefined IDs were implicitly grouped
+        const key = 'other_items';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
+        recipeNames[key] = t?.shopping_list?.other || 'Other';
+      }
     });
 
     return { grouped, recipeNames };
@@ -477,9 +490,9 @@ export const ListDetails = (): JSX.Element => {
         isCustom={!userListsItems.some((ri: any) => ri._id === item._id)}
         isPdf={isPdf}
         unitSystem={unitSystem}
-        // displayName={getItemDisplayName(item)}
-        // quantityDisplay={getQuantityDisplay(item)}
-        // recipeName={item.recipe?._id ? (item.recipe?.title?.[language] || item.recipe?.title?.en) : undefined}
+      // displayName={getItemDisplayName(item)}
+      // quantityDisplay={getQuantityDisplay(item)}
+      // recipeName={item.recipe?._id ? (item.recipe?.title?.[language] || item.recipe?.title?.en) : undefined}
       />
     ));
 
@@ -620,29 +633,26 @@ export const ListDetails = (): JSX.Element => {
             <Card>
               <CardContent className="p-4 sm:p-6">
                 <div
-                  className={`flex flex-col sm:flex-row ${
-                    isRTL ? 'items-start' : 'items-start'
-                  }  sm:items-center justify-between mb-6`}
+                  className={`flex flex-col sm:flex-row ${isRTL ? 'items-start' : 'items-start'
+                    }  sm:items-center justify-between mb-6`}
                 >
                   {/* Smart Tabs */}
                   <div className="flex items-center p-1 bg-gray-100 rounded-lg mb-4 sm:mb-0">
                     <button
                       onClick={() => setActiveTab('pending')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                        activeTab === 'pending'
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'pending'
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-900'
-                      }`}
+                        }`}
                     >
                       {t?.shopping_list?.pending_items || 'Pending'} ({pendingItems.length})
                     </button>
                     <button
                       onClick={() => setActiveTab('purchased')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                        activeTab === 'purchased'
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'purchased'
                           ? 'bg-white text-gray-900 shadow-sm'
                           : 'text-gray-500 hover:text-gray-900'
-                      }`}
+                        }`}
                     >
                       {t?.shopping_list?.purchased_items || 'Purchased'} ({purchasedItems.length})
                     </button>
@@ -809,9 +819,8 @@ export const ListDetails = (): JSX.Element => {
                             <div
                               className="h-2 bg-primaryColor rounded-full transition-all"
                               style={{
-                                width: `${
-                                  stats.total > 0 ? (stats.completed / stats.total) * 100 : 0
-                                }%`,
+                                width: `${stats.total > 0 ? (stats.completed / stats.total) * 100 : 0
+                                  }%`,
                               }}
                             />
                           </div>
@@ -866,10 +875,10 @@ export const ListDetails = (): JSX.Element => {
         initialQuery={
           swapItem
             ? swapItem.name?.[language] ||
-              swapItem.name?.en ||
-              swapItem.item?.name?.[language] ||
-              swapItem.item?.name?.en ||
-              ''
+            swapItem.name?.en ||
+            swapItem.item?.name?.[language] ||
+            swapItem.item?.name?.en ||
+            ''
             : ''
         }
       />
