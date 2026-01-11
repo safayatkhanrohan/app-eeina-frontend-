@@ -1,14 +1,15 @@
-import { App as CapacitorApp } from '@capacitor/app';
-import { Capacitor } from '@capacitor/core';
-import { RouterProvider } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import { LanguageProvider } from './contexts/LanguageContext';
-import { useAppDispatch } from './hooks/hook';
-import { useGetMeQuery } from './redux/Features/User/userApi';
-import { setUser, logout } from './redux/Features/Auth/authSlice';
-import { useEffect, useState } from 'react';
-import { router } from './routes/routes';
-import CookieBanner from './components/cookie/CookieBanner';
+import { App as CapacitorApp } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
+import { RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { useAppDispatch } from "./hooks/hook";
+import { useGetMeQuery } from "./redux/Features/User/userApi";
+import { setUser, logout } from "./redux/Features/Auth/authSlice";
+import { useEffect, useState } from "react";
+import { router } from "./routes/routes";
+import CookieBanner from "./components/cookie/CookieBanner";
+import DynamicTitle from "./components/common/DynamicTitle";
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ export const App = () => {
 
   const { data: apiUser, isError } = useGetMeQuery();
 
-  console.log('erorr', isError);
+  console.log("erorr", isError);
 
   useEffect(() => {
     if (apiUser) dispatch(setUser(apiUser.data));
@@ -28,7 +29,7 @@ export const App = () => {
 
     let listener: any;
 
-    CapacitorApp.addListener('backButton', () => {
+    CapacitorApp.addListener("backButton", () => {
       if (window.history.length > 1) {
         window.history.back();
       } else {
@@ -43,7 +44,7 @@ export const App = () => {
     };
   }, []);
   useEffect(() => {
-    const consent = localStorage.getItem('cookieConsent');
+    const consent = localStorage.getItem("cookieConsent");
     if (!consent) {
       setShowBanner(true);
     }
@@ -52,7 +53,7 @@ export const App = () => {
   return (
     <LanguageProvider>
       {showBanner && <CookieBanner onClose={() => setShowBanner(false)} />}
-
+    <DynamicTitle/>
       <RouterProvider router={router} />
       <Toaster />
     </LanguageProvider>
